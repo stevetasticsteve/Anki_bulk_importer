@@ -23,7 +23,7 @@ class window(QDialog):
         logging.debug('Addon Directory (self.addonDir): ' + str(self.addonDir))
         self.mw = mw
         self.setWindowTitle('Bulk Importer v.%s' % version)
-        self.setWindowIcon(QIcon(os.path.join(self.addonDir, 'Py_Logo.png')))
+        self.setWindowIcon(QIcon(os.path.join(self.addonDir, 'icons', 'Py_Logo.png')))
         self.home()
         self.setLayout(self.grid)
         self.setGeometry(0, 50, 600, 300)
@@ -38,12 +38,12 @@ class window(QDialog):
         self.grid.addWidget(picbtn, 0,0)
         #Add blank to pictures button
         addpicbtn = QPushButton('Add blank',self)
-        addpicbtn.setIcon(QIcon(os.path.join(self.addonDir,'add-icon.png')))
+        addpicbtn.setIcon(QIcon(os.path.join(self.addonDir, 'icons', 'add-icon.png')))
         addpicbtn.clicked.connect(self.add_blank_pic)
         self.grid.addWidget(addpicbtn, 0,1)
         #Add blank to audio
         addaudiobtn = QPushButton('Add blank',self)
-        addaudiobtn.setIcon(QIcon(os.path.join(self.addonDir,'add-icon.png')))
+        addaudiobtn.setIcon(QIcon(os.path.join(self.addonDir, 'icons', 'add-icon.png')))
         addaudiobtn.clicked.connect(self.add_blank_audio)
         self.grid.addWidget(addaudiobtn, 0,5)
         #Pick Audio button
@@ -53,7 +53,7 @@ class window(QDialog):
         self.grid.addWidget(audiobtn, 0,3)
         #Play button
         self.playbtn = QPushButton('', self)
-        self.playbtn.setIcon(QIcon(os.path.join(self.addonDir,'play.png')))
+        self.playbtn.setIcon(QIcon(os.path.join(self.addonDir, 'icons', 'play.png')))
         self.playbtn.clicked.connect(self.play)
         self.grid.addWidget(self.playbtn, 0,4)
         #Copy button
@@ -78,7 +78,7 @@ class window(QDialog):
         self.pic = QLabel(self)
         self.pic.setScaledContents(True)
         self.pic.setAlignment(Qt.AlignHCenter)
-        self.picSrc = os.path.join(self.addonDir,'placeholder.jpeg')
+        self.picSrc = os.path.join(self.addonDir, 'icons', 'placeholder.jpeg')
         self.pixmap = QPixmap(self.picSrc).scaled(150, 150, Qt.KeepAspectRatio)
         self.pic.setPixmap(self.pixmap)
         self.grid.addWidget(self.pic,4,0,2,3)
@@ -170,14 +170,14 @@ class window(QDialog):
                     audio = os.path.join(self.audioDir, filename)
                     play(audio)
                     self.playing =1
-                    self.playbtn.setIcon(QIcon(os.path.join(self.addonDir,'pause.png')))
+                    self.playbtn.setIcon(QIcon(os.path.join(self.addonDir, 'icons', 'pause.png')))
                 except (AttributeError,FileNotFoundError):
                     return None
 
         elif self.playing ==1:
             clearAudioQueue()
             self.playing=0
-            self.playbtn.setIcon(QIcon(os.path.join(self.addonDir,'play.png')))
+            self.playbtn.setIcon(QIcon(os.path.join(self.addonDir, 'icons', 'play.png')))
 
     def update_pic(self):
         #Updates thumbnail image when image selected
@@ -187,7 +187,7 @@ class window(QDialog):
         try:
             if filename == '':
                 logging.debug('loop entered')
-                self.picSrc = os.path.join(self.addonDir,'no-image.png')
+                self.picSrc = os.path.join(self.addonDir, 'icons', 'no-image.png')
                 logging.debug('No image Thumbnail = ' + str(self.picSrc))
                 self.pixmap = QPixmap(self.picSrc).scaled(50, 50)
                 self.pic.setPixmap(self.pixmap)
@@ -198,7 +198,7 @@ class window(QDialog):
                 self.pixmap = QPixmap(self.picSrc).scaled(200, 200, Qt.KeepAspectRatio)
                 self.pic.setPixmap(self.pixmap)
         except (TypeError, AttributeError):
-            self.picSrc = os.path.join(self.addonDir,'no-image.png')
+            self.picSrc = os.path.join(self.addonDir, 'icons', 'no-image.png')
             logging.debug('No image Thumbnail = ' + str(self.picSrc))
             self.pixmap = QPixmap(self.picSrc).scaled(50, 50)
             self.pic.setPixmap(self.pixmap)

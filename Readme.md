@@ -4,7 +4,7 @@ An Add-on for [Anki](https://apps.ankiweb.net/) that provides a user friendly fr
 creating multimedia cards easily in batches. Each card will have a text prompt and image on the front and audio with a text 
 response on the back.
 
-![screenshot](importer_screen.png)
+![screenshot](icons/importer_screen.png)
 
 - Images and audio can be previewed, no need to rename files to something recognisable
 - Images and audio can be moved around so they match, no need to order them in a file explorer
