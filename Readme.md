@@ -1,30 +1,32 @@
 # CLA Importer Anki addon
 
-March 2020
-Copyright: Stephen Stanley <stephen_stanley@ntmpng.org>
-License: GNU AGPL, version 3 or later; http://www.gnu.org/licenses/agpl.html
+An Add-on for [Anki](https://apps.ankiweb.net/) that provides a user friendly front end for Anki's import function for 
+creating multimedia cards easily in batches. Each card will have a text prompt and image on the front and audio with a text 
+response on the back.
 
+![screenshot](importer_screen.png)
 
-### Overview:
+- Images and audio can be previewed, no need to rename files to something recognisable
+- Images and audio can be moved around so they match, no need to order them in a file explorer
+- Images are automatically scaled to be suitable for a flashcard (Not HD!)
+- Images and audio are added to Anki's collections.media folder
+- Cards are created using a 'CLA card' template
 
-CLA importer is an Addon for [Anki](https://apps.ankiweb.net/)
-The purpose of CLA importer is to create multimedia cards easily in batches. Each card has a text prompt and image on the front and audio with a text response on the back.
-Four columns represent each of the four fields. Images and audio can be previewed and dragged rows can be dragged around to match audio to image.  
+## Getting started:
+### Prerequisites
+- [Anki 2.1](https://apps.ankiweb.net/)
 
+### Installing
+Clone or download the whole folder and place it in Anki's add-on folder. Next time Anki boots CLA importer will be
+available under tools.
 
-### Installation:
+OS | Defailt add-on folder location
+-----------------------------------
+Windows | C:\Users\user\AppData\Roaming\Anki2\addons21
+Mac OS  | /L/home/steve/.local/share/Anki2/addons21ibrary/Application Support/Anki2
+Linux   | /home/user/.local/share/Anki2/addons21/
 
-REQUIRES Anki 2.1
-Anki 2.1 is currently in beta (it's being tested). Download the latest version here https://apps.ankiweb.net/downloads/beta/
-This Addon is not compatible with Anki 2.0 (the version you get if you download regular Anki) and compatibilty with 2.0
-is not planned.
-
-The addon is packaged as a zip file. Locate the Anki addons21 folder:
-(default) Windows: C:\Users\*current user*\AppData\Roaming\Anki2\addons21  (note, AppData is usually a hidden folder)
-(default) Mac: /Library/Application Support/Anki2
-
-Unzip the contents of the zipped folder to a new folder named CLA Importer in the addons21 folder: \Anki2\addons21\CLA Importer
-Anki will scan the addon folder at startup. Next time Anki is started you should see CLA Importer under the tools menu.
+*AppData in Windows and .local in MacOS and Linux are hidden folders*
 
 
 ### How it works:
