@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # License: GNU AGPL, version 3 or later; http://www.gnu.org/licenses/agpl.html
 
-version = '1.01'
+version = '1.022'
 
 import sys, os, shutil, logging, re
 
@@ -129,7 +129,7 @@ class window(QDialog):
         options = QFileDialog.Options()
         caption = "Load pictures"
         startingFolder = os.path.expanduser('~\pictures')
-        file_filter = "Images (*.jpeg *.jpg)"
+        file_filter = "Images (*.jpeg *.jpg *JPG *JPEG)"
         file, _ = QFileDialog.getOpenFileNames(self,caption, startingFolder,file_filter, options=options)  
         if len(file) != 0:
             self.picDir = os.path.dirname(file[0])
@@ -149,7 +149,7 @@ class window(QDialog):
         options = QFileDialog.Options()
         caption = "Load Audio"
         startingFolder = os.path.expanduser('~\music')
-        file_filter = "Audio (*.mp3 *.MP3 *.wav)"
+        file_filter = "Audio (*.mp3 *.MP3)"
         file, _ = QFileDialog.getOpenFileNames(self,caption, startingFolder,file_filter, options=options)  
         if len(file) != 0:
             self.audioDir = os.path.dirname(file[0])
@@ -265,6 +265,7 @@ class window(QDialog):
         length3 = self.Table3Data.rowCount()
         logging.debug('Import called; Table lengths: {}, {}, {}, {}'.format(str(length1), str(length2), str(length3), str(length3)))
         if length1 == 0:
+            QMessageBox.about(self,'Warning',"There needs to be an equal number of items in each field, insert blank rows if required.")
             logging.info('Blank import called, doing nothing')
             return None
         if length1 != length2 or length2 != length3 or length1 != length3:
@@ -280,7 +281,7 @@ class window(QDialog):
         logging.debug('Media folder (mediaDir): ' + (str(mediaDir)))
         #Picture import
         for row in range(self.Table1Data.rowCount()):
-            if self.Table1Data.item(row) and self.Table1Data.item(row).text() != None:
+            if self.Table1Data.item(row) and self.Table1Data.item(row).text() != "":
                 picBase = self.Table1Data.item(row).text()
                 logging.debug('Read from picture row: ' + str(picBase))
                 picPath = os.path.join(self.picDir, picBase)
@@ -383,10 +384,10 @@ class window(QDialog):
         Tag = 'Import#' + str(iNum)
         logging.debug('Tag = ' + Tag)
 
-        #Temporary file creatoin
+        #Temporary file creation
         for i in range(len(self.picImport)):
             logging.debug('Index = ' + str(i))
-            line.append(self.promptImport[i] + ',' + self.picImport[i] + ',' + self.audioImport[i] + ',' + self.responseImport[i] + ',' + Tag +'\n')
+            line.append(self.promptImport[i] + ',' + self.picImport[i] + ',' + self.audioImport[i] + ',' + self.responseImport[i] + ',' + ',' + Tag +'\n')
         ifile.writelines(line)
         ifile.close()
         logging.debug('Temporary file complete')
@@ -399,7 +400,7 @@ class window(QDialog):
         if mw.col.models.byName('CLA') == None:
             logging.info('No CLA card, creating one')
             newModel = mw.col.models.new('CLA')
-            newModel['flds'] = [{'name': 'Prompt', 'ord': 0, 'sticky': False, 'rtl': False, 'font': 'Arial', 'size': 20, 'media': []}, {'name': 'Picture', 'ord': 1, 'sticky': False, 'rtl': False, 'font': 'Arial', 'size': 20, 'media': []}, {'name': 'Audio', 'ord': 2, 'sticky': False, 'rtl': False, 'font': 'Arial', 'size': 20, 'media': []}, {'name': 'Response', 'ord': 3, 'sticky': False, 'rtl': False, 'font': 'Arial', 'size': 20, 'media': []}]
+            newModel['flds'] = [{'name': 'Prompt', 'ord': 0, 'sticky': False, 'rtl': False, 'font': 'Arial', 'size': 20, 'media': []}, {'name': 'Picture', 'ord': 1, 'sticky': False, 'rtl': False, 'font': 'Arial', 'size': 20, 'media': []}, {'name': 'Audio', 'ord': 2, 'sticky': False, 'rtl': False, 'font': 'Arial', 'size': 20, 'media': []}, {'name': 'Response', 'ord': 3, 'sticky': False, 'rtl': False, 'font': 'Arial', 'size': 20, 'media': []}, {'name': 'Hint', 'ord': 4, 'sticky': False, 'rtl': False, 'font': 'Arial', 'size': 20, 'media': []}]
             newModel['tmpls'] = [{'name': 'CLA Card', 'ord': 0, 'qfmt': '{{Prompt}}\n<br>\n{{Picture}}\n\n', 'afmt': '{{Response}}{{Audio}}\n<br>\n{{Picture}}', 'did': None, 'bqfmt': '', 'bafmt': ''}]
             newModel['req'] = [0, 'any', 3]
             newModel['sortf'] = 3
