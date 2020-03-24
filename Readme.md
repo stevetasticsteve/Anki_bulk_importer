@@ -12,6 +12,8 @@ response on the back.
 - Images and audio are added to Anki's collections.media folder
 - Cards are created using a 'CLA card' template
 
+Once imported you are free to move or delete the source files as copies are now contained in Anki's media folder.
+
 ## Getting started:
 ### Prerequisites
 - [Anki 2.1](https://apps.ankiweb.net/)
@@ -21,22 +23,14 @@ Clone or download the whole folder and place it in Anki's add-on folder. Next ti
 available under tools.
 
 OS | Defailt add-on folder location
------------------------------------
+-- | --------------------------------
 Windows | C:\Users\user\AppData\Roaming\Anki2\addons21
 Mac OS  | /L/home/steve/.local/share/Anki2/addons21ibrary/Application Support/Anki2
 Linux   | /home/user/.local/share/Anki2/addons21/
 
 *AppData in Windows and .local in MacOS and Linux are hidden folders*
 
-
-### How it works:
-
-CLA importer will take the information you give it by arranging the four tables and create a temporary text file to import.
-It then uses Anki's importer to create cards.
-Images are copied, resized to 600 pixels and moved into the collection.media folder of your current Anki user.
-Audio is copied and moved to the collection.media folder.
-
-The original image and audio files can then be moved or deleted, Anki has copies of them itself and will continue to 
-function.
-Imports are tagged with an import number - this enables filtering in the Anki Broswer to pull up a desired batch for
-editing or deletion after a mistaken import.
+## License
+This project is licensed under the GPL-3.0 License - see [License](https://github.com/stevetasticsteve/CLA_importer/blob/master/LICENSE)
+for details.
+You are free to use, edit and redistribute this add-on.
