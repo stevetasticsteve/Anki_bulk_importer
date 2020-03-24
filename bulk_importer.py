@@ -1,7 +1,3 @@
-# Copyright: Stephen Stanley <stephen_stanley@ntmpng.org>
-# -*- coding: utf-8 -*-
-# License: GNU AGPL, version 3 or later; http://www.gnu.org/licenses/agpl.html
-
 version = '1.022'
 
 import sys, os, shutil, logging, re
@@ -20,13 +16,13 @@ class window(QDialog):
 
     def __init__(self,mw):
         QDialog.__init__(self,mw)
-        self.addonDir = (os.path.join(mw.pm.addonFolder(),'CLA Importer'))
+        self.addonDir = (os.path.join(mw.pm.addonFolder(),'Bulk Importer'))
         os.chdir(self.addonDir)   
-        logging.debug('CLA importer Window opened')
+        logging.debug('Bulk importer Window opened')
         logging.debug('CwDir: ' + str(os.getcwd()))
         logging.debug('Addon Directory (self.addonDir): ' + str(self.addonDir))
         self.mw = mw
-        self.setWindowTitle('CLA Importer v.%s' % version)
+        self.setWindowTitle('Bulk Importer v.%s' % version)
         self.setWindowIcon(QIcon(os.path.join(self.addonDir, 'Py_Logo.png')))
         self.home()
         self.setLayout(self.grid)

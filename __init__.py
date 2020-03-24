@@ -1,6 +1,6 @@
 from aqt import mw, QAction
 import os, logging
-from . import CLA_Importer
+from . import bulk_importer
 
 addonDir = (os.path.join(mw.pm.addonFolder(),'CLA Importer'))
 os.chdir(addonDir)
@@ -9,7 +9,7 @@ logging.basicConfig(filename='logfile.log',level=logging.DEBUG)
 def CLAImporter():
     try:
         logging.debug('\n\nAddon called from menu')
-        CLA_Importer.run()
+        bulk_importer.run()
     except Exception as e:
         logging.critical(str(e))
     
