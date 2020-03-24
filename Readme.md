@@ -19,10 +19,10 @@ Once imported you are free to move or delete the source files as copies are now 
 - [Anki 2.1](https://apps.ankiweb.net/)
 
 ### Installing
-Clone or download the whole folder and place it in Anki's add-on folder. Next time Anki boots bulk importer will be
+Clone or download the whole folder and place it in Anki's add-on folder in a folder named bulk_importer. Next time Anki boots bulk importer will be
 available under tools.
 
-OS | Defailt add-on folder location
+OS | Default add-on folder location
 -- | --------------------------------
 Windows | C:\Users\user\AppData\Roaming\Anki2\addons21
 Mac OS  | /L/home/steve/.local/share/Anki2/addons21ibrary/Application Support/Anki2

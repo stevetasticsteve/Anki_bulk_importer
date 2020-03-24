@@ -2,7 +2,7 @@ from aqt import mw, QAction
 import os, logging
 from . import bulk_importer
 
-addonDir = (os.path.join(mw.pm.addonFolder(),'CLA Importer'))
+addonDir = (os.path.join(mw.pm.addonFolder(),'bulk_importer'))
 os.chdir(addonDir)
 logging.basicConfig(filename='logfile.log',level=logging.DEBUG)
 
@@ -14,6 +14,6 @@ def CLAImporter():
         logging.critical(str(e))
     
 # create a new menu item, "CLA importer"
-action = QAction("CLA importer", mw)
+action = QAction("Bulk importer", mw)
 action.triggered.connect(CLAImporter)
 mw.form.menuTools.addAction(action)

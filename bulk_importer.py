@@ -16,7 +16,7 @@ class window(QDialog):
 
     def __init__(self,mw):
         QDialog.__init__(self,mw)
-        self.addonDir = (os.path.join(mw.pm.addonFolder(),'Bulk Importer'))
+        self.addonDir = (os.path.join(mw.pm.addonFolder(),'bulk_importer'))
         os.chdir(self.addonDir)   
         logging.debug('Bulk importer Window opened')
         logging.debug('CwDir: ' + str(os.getcwd()))
