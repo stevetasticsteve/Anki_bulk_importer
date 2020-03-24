@@ -34,3 +34,6 @@ Linux   | /home/user/.local/share/Anki2/addons21/
 This project is licensed under the GPL-3.0 License - see [License](https://github.com/stevetasticsteve/Anki_bulk_importer/blob/master/LICENSE)
 for details.
 You are free to use, edit and redistribute this add-on.
+
+## Authors
+* **Steve Stanley**, Missionary involved in language learning - Initial work
