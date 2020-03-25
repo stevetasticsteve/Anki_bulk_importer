@@ -26,21 +26,7 @@ def create_card():
     return card
 
 def run(self):
-    length1 = self.Table1Data.rowCount()
-    length2 = self.Table2Data.rowCount()
-    length3 = self.Table3Data.rowCount()
-    logging.debug('Import called; Table lengths: {}, {}, {}, {}'.format(str(length1), str(length2), str(length3),
-                                                                        str(length3)))
-    if length1 == 0:
-        aqt.qt.QMessageBox.about(self, 'Warning',
-                                 "There needs to be an equal number of items in each field, insert blank rows if required.")
-        logging.info('Blank import called, doing nothing')
-        return None
-    if length1 != length2 or length2 != length3 or length1 != length3:
-        aqt.qt.QMessageBox.about(self, 'Warning',
-                                 "There needs to be an equal number of items in each field, insert blank rows if required.")
-        logging.info('Uneven import called, warning given')
-        return None
+    length1 = self.pictureTableData.rowCount()
     logging.debug('Import proceeding')
     self.picImport = []
     self.audioImport = []
@@ -49,9 +35,9 @@ def run(self):
     mediaDir = re.sub("(?i)\.(anki2)$", ".media", aqt.mw.col.path)
     logging.debug('Media folder (mediaDir): ' + (str(mediaDir)))
     # Picture import
-    for row in range(self.Table1Data.rowCount()):
-        if self.Table1Data.item(row) and self.Table1Data.item(row).text() != "":
-            picBase = self.Table1Data.item(row).text()
+    for row in range(self.pictureTableData.rowCount()):
+        if self.pictureTableData.item(row) and self.pictureTableData.item(row).text() != "":
+            picBase = self.pictureTableData.item(row).text()
             logging.debug('Read from picture row: ' + str(picBase))
             picPath = os.path.join(self.picDir, picBase)
             picAnki = '<img src="' + picBase + '">'
@@ -70,8 +56,8 @@ def run(self):
             logging.debug('Blank picture row, \'\' appended as picture')
 
         # Audio import
-        if self.Table2Data.item(row) and self.Table2Data.item(row).text() != '':
-            audioBase = self.Table2Data.item(row).text()
+        if self.audioTableData.item(row) and self.audioTableData.item(row).text() != '':
+            audioBase = self.audioTableData.item(row).text()
             logging.debug('Read from audio row: ' + str(audioBase))
             audioPath = os.path.join(self.audioDir, audioBase)
             audioAnki = "[sound:" + audioBase + "]"
@@ -94,15 +80,15 @@ def run(self):
             self.audioImport.append('')
             logging.debug('Blank audio row, \'\' appended as audio')
 
-        if self.Table3Data.item(row):
-            promptcontents = self.Table3Data.item(row)
+        if self.promptTableData.item(row):
+            promptcontents = self.promptTableData.item(row)
             self.promptImport.append(promptcontents.text())
             logging.debug(str(promptcontents.text()) + ' appended as prompt')
         else:
             self.promptImport.append('')
             logging.debug('Blank prompt row, \'\' appended as prompt')
-        if self.Table4Data.item(row):
-            responsecontents = self.Table4Data.item(row)
+        if self.responseTableData.item(row):
+            responsecontents = self.responseTableData.item(row)
             self.responseImport.append(responsecontents.text())
             logging.debug(str(responsecontents.text()) + ' appended as response')
         else:
