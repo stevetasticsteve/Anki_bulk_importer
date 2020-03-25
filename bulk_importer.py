@@ -290,7 +290,7 @@ class Window(aqt.qt.QDialog):
     def Anki_import(self):
         run_import.run(self)
 
-    def closeEvent(self):
+    def closeEvent(self, event):
         aqt.mw.reset()
         M = anki.media.MediaManager(aqt.mw.col, None)
         M.check()
