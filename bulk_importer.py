@@ -11,18 +11,25 @@ import anki.importing as importing
 import aqt.deckchooser
 from anki.models import ModelManager
 from anki.media import MediaManager
+from . import config
 
 class window(QDialog):
 
     def __init__(self,mw):
         QDialog.__init__(self,mw)
-        self.addonDir = (os.path.join(mw.pm.addonFolder(),'bulk_importer'))
-        os.chdir(self.addonDir)   
+        if config.Dev:
+            self.addonDir = (os.path.join(mw.pm.addonFolder(),'bulk_importer_dev'))
+        else:
+            self.addonDir = (os.path.join(mw.pm.addonFolder(),'bulk_importer'))
+        os.chdir(self.addonDir)
         logging.debug('Bulk importer Window opened')
         logging.debug('CwDir: ' + str(os.getcwd()))
         logging.debug('Addon Directory (self.addonDir): ' + str(self.addonDir))
         self.mw = mw
-        self.setWindowTitle('Bulk Importer v.%s' % version)
+        if config.Dev:
+            self.setWindowTitle('Bulk Importer Development version')
+        else:
+            self.setWindowTitle('Bulk Importer v.%s' % version)
         self.setWindowIcon(QIcon(os.path.join(self.addonDir, 'icons', 'Py_Logo.png')))
         self.home()
         self.setLayout(self.grid)
