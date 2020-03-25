@@ -1,12 +1,14 @@
-from aqt import mw, QAction
-import os, logging
+import aqt
+import os
+import logging
+
 from . import bulk_importer
 from . import config
 
 if config.Dev:
-    addonDir = (os.path.join(mw.pm.addonFolder(),'bulk_importer_dev'))
+    addonDir = (os.path.join(aqt.mw.pm.addonFolder(),'bulk_importer_dev'))
 else:
-    addonDir = (os.path.join(mw.pm.addonFolder(),'bulk_importer'))
+    addonDir = (os.path.join(aqt.mw.pm.addonFolder(),'bulk_importer'))
 os.chdir(addonDir)
 logging.basicConfig(filename='logfile.log',level=logging.DEBUG)
 
@@ -19,8 +21,8 @@ def CLAImporter():
     
 # create a new menu item, "CLA importer"
 if config.Dev:
-    action = QAction("Bulk importer (development)", mw)
+    action = aqt.QAction("Bulk importer (development)", aqt.mw)
 else:
-    action = QAction("Bulk importer", mw)
+    action = aqt.QAction("Bulk importer", aqt.mw)
 action.triggered.connect(CLAImporter)
-mw.form.menuTools.addAction(action)
+aqt.mw.form.menuTools.addAction(action)
