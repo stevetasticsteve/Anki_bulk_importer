@@ -48,14 +48,6 @@ class Window(aqt.qt.QDialog):
         # Load pictures button
         picbtn = aqt.qt.QPushButton('Load pics', self)
         picbtn.clicked.connect(self.open_pic_files)
-        # Add blank to pictures button
-        addpicbtn = aqt.qt.QPushButton('Add blank', self)
-        addpicbtn.setIcon(aqt.qt.QIcon(os.path.join(self.addonDir, 'icons', 'add-icon.png')))
-        addpicbtn.clicked.connect(self.add_blank_pic)
-        # Add blank to audio
-        addaudiobtn = aqt.qt.QPushButton('Add blank', self)
-        addaudiobtn.setIcon(aqt.qt.QIcon(os.path.join(self.addonDir, 'icons', 'add-icon.png')))
-        addaudiobtn.clicked.connect(self.add_blank_audio)
         # Pick Audio button
         audiobtn = aqt.qt.QPushButton('Load Audio', self)
         audiobtn.clicked.connect(self.open_audio_files)
@@ -99,10 +91,8 @@ class Window(aqt.qt.QDialog):
         # add widgets to grid, starting Top left. Left to right, row by row
         self.grid.addWidget(copybtn, self.topBtnRow, self.promptColumn)
         self.grid.addWidget(picbtn, self.topBtnRow, self.pictureColumn)
-        self.grid.addWidget(addpicbtn, self.topBtnRow, self.pictureColumn + 1)
         self.grid.addWidget(audiobtn, self.topBtnRow, self.audioColumn)
         self.grid.addWidget(self.playbtn, self.topBtnRow, self.audioColumn + 1)
-        self.grid.addWidget(addaudiobtn, self.topBtnRow, self.audioColumn + 2)
         # (tables were added with the draw_table method)
         self.grid.addWidget(self.pic, 4, 3, 2, 3)
         self.grid.addWidget(self.deckLabel, self.bottomBtnRow, self.audioColumn)
@@ -287,20 +277,6 @@ class Window(aqt.qt.QDialog):
         elif total_picture_rows > long:
             for i in range(total_picture_rows, long - 1, -1):
                 self.pictureTableData.removeRow(i)
-
-    def add_blank_pic(self):
-        # Add new row to Table 1
-        item = aqt.qt.QStandardItem('')
-        item.setDropEnabled(False)
-        item.setEditable(False)
-        self.pictureTableData.appendRow(item)
-
-    def add_blank_audio(self):
-        # Add new row to Table 2
-        item = aqt.qt.QStandardItem('')
-        item.setDropEnabled(False)
-        item.setEditable(False)
-        self.audioTableData.appendRow(item)
 
     def copy_prompt(self):
         # Copy and paste first prompt to all rows
