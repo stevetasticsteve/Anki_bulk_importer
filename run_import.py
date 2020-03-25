@@ -6,6 +6,7 @@ import os
 import re
 import shutil
 
+
 def create_card():
     card = aqt.mw.col.models.new('CLA')
     card['flds'] = [
@@ -15,8 +16,8 @@ def create_card():
         {'name': 'Response', 'ord': 3, 'sticky': False, 'rtl': False, 'font': 'Arial', 'size': 20, 'media': []},
         {'name': 'Hint', 'ord': 4, 'sticky': False, 'rtl': False, 'font': 'Arial', 'size': 20, 'media': []}]
     card['tmpls'] = [{'name': 'CLA Card', 'ord': 0, 'qfmt': '{{Prompt}}\n<br>\n{{Picture}}\n\n',
-                          'afmt': '{{Response}}{{Audio}}\n<br>\n{{Picture}}', 'did': None, 'bqfmt': '',
-                          'bafmt': ''}]
+                      'afmt': '{{Response}}{{Audio}}\n<br>\n{{Picture}}', 'did': None, 'bqfmt': '',
+                      'bafmt': ''}]
     card['req'] = [0, 'any', 3]
     card['sortf'] = 3
     card['css'] = '.card {\n font-family: arial;\n font-size: 20px;\n text-align: center;\n color: black;\n ' \
@@ -24,6 +25,7 @@ def create_card():
                   'max-height: 600px;\n}\n'
     card['type'] = 0
     return card
+
 
 def run(self):
     length1 = self.pictureTableData.rowCount()
@@ -64,18 +66,17 @@ def run(self):
             self.audioImport.append(audioAnki)
             logging.debug(str(audioAnki) + ' appended as audio')
             try:
-                if self.keepOriginal == True:  # Loop to enable destructive copy/paste. Unused, value set to True under __init))
+                if self.keepOriginal:  # Loop to enable destructive copy/paste. Unused, value set to True under __init))
                     shutil.copyfile(audioPath, '_' + audioBase)
                     copyAudio = os.path.join(self.addonDir, '_' + audioBase)
                     shutil.move(audioPath, mediaDir)
                     os.rename(copyAudio, audioBase)
                     shutil.move(os.path.join(self.addonDir, audioBase), self.audioDir)
-                elif self.keepOriginal == False:
+                elif not self.keepOriginal:
                     shutil.move(audioSrc, mediaDir)
             except shutil.Error:
                 logging.warning('File already exists: ' + str(audioBase))
                 os.remove(copyAudio)
-                None
         else:
             self.audioImport.append('')
             logging.debug('Blank audio row, \'\' appended as audio')
@@ -129,7 +130,7 @@ def run(self):
         countOb.write(str(count))
         countOb.close()
 
-    elif os.path.exists(countFile) == False:
+    elif not os.path.exists(countFile):
         count = 1
         iNum = 1
         countOb = open(countFile, 'w')
@@ -176,7 +177,6 @@ def run(self):
     # Importer execution and followup
     importer.run()
     summaryMsg = str(length1) + ' card(s) created in ' + self.Deck._deckName + ' deck.'
-    summary = aqt.qt.QMessageBox.about(self, 'Results', summaryMsg)
+    aqt.qt.QMessageBox.about(self, 'Results', summaryMsg)
     os.remove(filePath)
     logging.debug('Temporary file deleted')
-    self.close()

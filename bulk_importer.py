@@ -1,7 +1,3 @@
-#todo if you load 6 pictures, then load 1 picture you don't just get 1 picture, you get several. Same with audio
-
-version = '1.1'
-
 import sys
 import os
 import logging
@@ -11,6 +7,10 @@ import anki
 
 from . import config
 from . import run_import
+
+# todo if you load 6 pictures, then load 1 picture you don't just get 1 picture, you get several. Same with audio
+
+version = '1.1'
 
 
 class Window(aqt.qt.QDialog):
@@ -101,11 +101,10 @@ class Window(aqt.qt.QDialog):
         self.setLayout(self.grid)
 
         # Set window geometry
-        self.position = (200, 200) # xy coordinates of top left corner of window
+        self.position = (200, 200)  # xy coordinates of top left corner of window
         self.setGeometry(self.position[0], self.position[1], config.window_size[0] + self.position[0],
                          config.window_size[1] + self.position[1])
         self.show()
-
 
     def create_model(self, title, data):
         # Creates a model to be used by tableview widget.
@@ -115,7 +114,7 @@ class Window(aqt.qt.QDialog):
             item = aqt.qt.QStandardItem(i)
             item.setDropEnabled(False)
             model.appendRow(item)
-        return (model)
+        return model
 
     def draw_table(self, row0, column0, row1, column1, model):
         # Draws a tableview, requires a model to be passed in.
@@ -131,11 +130,11 @@ class Window(aqt.qt.QDialog):
         self.grid.addWidget(self.table, row0, column0, row1, column1)
         return self.table
 
-    @ staticmethod
-    def close_application(self):
+    @staticmethod
+    def close_application():
         sys.exit()
 
-    def open_pic_files(self, window):
+    def open_pic_files(self):
         # Opens files and displays in table1
         options = aqt.qt.QFileDialog.Options()
         caption = "Load pictures"
@@ -230,8 +229,8 @@ class Window(aqt.qt.QDialog):
             else:
                 break
         total_audio_rows = self.audioTableData.rowCount()  # total number of rows including blanks
-        audio_rows = total_audio_rows # number of rows excluding blanks on end
-        for i in range(total_audio_rows - 1, 0, -1): # audio_rows -1 accounts for 0 indexing
+        audio_rows = total_audio_rows  # number of rows excluding blanks on end
+        for i in range(total_audio_rows - 1, 0, -1):  # audio_rows -1 accounts for 0 indexing
             if self.audioTableData.item(i).text() == '':
                 audio_rows -= 1
             else:
@@ -265,7 +264,7 @@ class Window(aqt.qt.QDialog):
                 item.setDropEnabled(False)
                 self.audioTableData.appendRow(item)
         elif total_audio_rows > long:
-            for i in range(total_audio_rows, long -1, -1):
+            for i in range(total_audio_rows, long - 1, -1):
                 self.audioTableData.removeRow(i)
 
         # add or remove blank rows to picture to match longest table
@@ -291,7 +290,7 @@ class Window(aqt.qt.QDialog):
     def Anki_import(self):
         run_import.run(self)
 
-    def closeEvent(self, event):
+    def closeEvent(self):
         aqt.mw.reset()
         M = anki.media.MediaManager(aqt.mw.col, None)
         M.check()
