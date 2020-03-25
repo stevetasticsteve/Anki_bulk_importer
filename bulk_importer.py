@@ -1,12 +1,14 @@
 version = '1.1'
 
-import sys, os, shutil, logging, re
+import sys
+import os
+import shutil
+import logging
+import re
 
-from anki.sound import play, clearAudioQueue
 import aqt
-import anki.importing as importing
-import aqt.deckchooser
-from anki.media import MediaManager
+import anki
+
 from . import config
 
 class window(aqt.qt.QDialog):
@@ -171,14 +173,14 @@ class window(aqt.qt.QDialog):
                 try:
                     filename = index[0].data()
                     audio = os.path.join(self.audioDir, filename)
-                    play(audio)
+                    anki.sound.play(audio)
                     self.playing =1
                     self.playbtn.setIcon(aqt.qt.QIcon(os.path.join(self.addonDir, 'icons', 'pause.png')))
                 except (AttributeError,FileNotFoundError):
                     return None
 
         elif self.playing ==1:
-            clearAudioQueue()
+            anki.sound.clearAudioQueue()
             self.playing=0
             self.playbtn.setIcon(aqt.qt.QIcon(os.path.join(self.addonDir, 'icons', 'play.png')))
 
@@ -392,7 +394,7 @@ class window(aqt.qt.QDialog):
         logging.debug('Temporary file complete')
 
         #Load Anki importer
-        importer = importing.Importers[0][1]
+        importer = anki.importing.Importers[0][1]
         importer = importer(aqt.mw.col, filePath)
 
         #Set model to CLA, create if absent
@@ -430,7 +432,7 @@ class window(aqt.qt.QDialog):
 
     def closeEvent(self, event):
         aqt.mw.reset()
-        M = MediaManager(aqt.mw.col, None)
+        M = anki.media.MediaManager(aqt.mw.col, None)
         M.check()
         
 def run():
