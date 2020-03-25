@@ -1,3 +1,5 @@
+#todo if you load 6 pictures, then load 1 picture you don't just get 1 picture, you get several. Same with audio
+
 version = '1.1'
 
 import sys
@@ -161,7 +163,7 @@ class Window(aqt.qt.QDialog):
                 item.setDropEnabled(False)
                 item.setEditable(False)
                 self.pictureTableData.setItem(i, item)
-        self.Table3and4_length()
+        self.equalize_rows()
 
     def open_audio_files(self):
         # Opens files and displays in table2
@@ -180,7 +182,7 @@ class Window(aqt.qt.QDialog):
                 item.setDropEnabled(False)
                 item.setEditable(False)
                 self.audioTableData.setItem(i, item)
-        self.Table3and4_length()
+        self.equalize_rows()
 
     def play(self):
         # Play button functionality - play and pause selected audio
@@ -226,30 +228,65 @@ class Window(aqt.qt.QDialog):
             self.pixmap = aqt.qt.QPixmap(self.picSrc).scaled(50, 50)
             self.pic.setPixmap(self.pixmap)
 
-    def Table3and4_length(self):
+    def equalize_rows(self):
         # Adds or removes rows to prompt and response to match first tables
-        length1 = self.pictureTableData.rowCount()
-        length2 = self.audioTableData.rowCount()
-        length3 = self.promptTableData.rowCount()
 
-        if length1 > length2:
-            long = length1
-        elif length1 < length2:
-            long = length2
-        else:
-            long = length1
+        # find total number of rows, and also find the final non-blank row for audio and pictures
+        total_picture_rows = self.pictureTableData.rowCount()  # total number of rows including blanks on end
+        picture_rows = total_picture_rows  # number of rows excluding blanks on end
+        for i in range(total_picture_rows - 1, 0, -1):  # picture_rows -1 to account for 0 indexing
+            if self.pictureTableData.item(i).text() == '':
+                picture_rows -= 1  # will loop to find the final row containing non blank data
+            else:
+                break
+        total_audio_rows = self.audioTableData.rowCount()  # total number of rows including blanks
+        audio_rows = total_audio_rows # number of rows excluding blanks on end
+        for i in range(total_audio_rows - 1, 0, -1): # audio_rows -1 accounts for 0 indexing
+            if self.audioTableData.item(i).text() == '':
+                audio_rows -= 1
+            else:
+                break
+        prompt_rows = self.promptTableData.rowCount()
 
-        if length3 < long:
-            for i in range(length3, long):
+        # find the longest table
+        if picture_rows > audio_rows:
+            long = picture_rows
+        elif picture_rows < audio_rows:
+            long = audio_rows
+        else:  # length is equal, so use either value
+            long = picture_rows
+
+        # add blank rows to prompt and response to match longest table
+        if prompt_rows < long:  # add rows to prompt and response until rows equal
+            for i in range(prompt_rows, long):
                 item = aqt.qt.QStandardItem('')
                 item.setDropEnabled(False)
                 self.promptTableData.appendRow(item)
                 self.responseTableData.appendRow(item)
-
-        elif length3 > long:
-            for i in range(length3, long - 1, -1):
+        elif prompt_rows > long:  # remove rows from prompt and response until rows equal
+            for i in range(prompt_rows, long - 1, -1):
                 self.promptTableData.removeRow(i)
                 self.responseTableData.removeRow(i)
+
+        # add or remove blank rows to audio to match longest table
+        if total_audio_rows < long:
+            for i in range(total_audio_rows, long):
+                item = aqt.qt.QStandardItem('')
+                item.setDropEnabled(False)
+                self.audioTableData.appendRow(item)
+        elif total_audio_rows > long:
+            for i in range(total_audio_rows, long -1, -1):
+                self.audioTableData.removeRow(i)
+
+        # add or remove blank rows to picture to match longest table
+        if total_picture_rows < long:
+            for i in range(total_picture_rows, long):
+                item = aqt.qt.QStandardItem('')
+                item.setDropEnabled(False)
+                self.pictureTableData.appendRow(item)
+        elif total_picture_rows > long:
+            for i in range(total_picture_rows, long - 1, -1):
+                self.pictureTableData.removeRow(i)
 
     def add_blank_pic(self):
         # Add new row to Table 1
