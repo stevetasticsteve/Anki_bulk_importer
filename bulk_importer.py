@@ -1,4 +1,4 @@
-version = '1.022'
+version = '1.1'
 
 import sys, os, shutil, logging, re
 
@@ -6,10 +6,8 @@ from aqt.qt import *
 from anki.sound import play, clearAudioQueue
 import aqt
 from aqt import mw
-from aqt.importing import ImportDialog
 import anki.importing as importing
 import aqt.deckchooser
-from anki.models import ModelManager
 from anki.media import MediaManager
 from . import config
 
