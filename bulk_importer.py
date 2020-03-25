@@ -30,7 +30,9 @@ class Window(aqt.qt.QDialog):
         self.setWindowIcon(aqt.qt.QIcon(os.path.join(self.addonDir, 'icons', 'Py_Logo.png')))
         self.home()
         self.setLayout(self.grid)
-        self.setGeometry(0, 50, 600, 300)
+        self.position = (200, 200) # xy coordinates of top left corner of window
+        self.setGeometry(self.position[0], self.position[1], config.window_size[0] + self.position[0],
+                         config.window_size[1] + self.position[1])
         self.show()
 
     def home(self):
