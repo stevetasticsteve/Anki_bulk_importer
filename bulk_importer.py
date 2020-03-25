@@ -89,15 +89,15 @@ class Window(aqt.qt.QDialog):
         self.pic.setPixmap(self.pixmap)
         self.grid.addWidget(self.pic, 4, 0, 2, 3)
         # Draw Tables
-        self.Table1Data = self.create_model(['Picture'], [])
-        self.Table2Data = self.create_model(['Audio'], [])
-        self.Table3Data = self.create_model(['Prompt'], [])
-        self.Table4Data = self.create_model(['Response'], [])
-        self.Table1 = self.draw_table(1, 0, 2, 3, self.Table1Data)
-        self.Table1.clicked.connect(self.update_pic)
-        self.Table2 = self.draw_table(1, 3, 4, 3, self.Table2Data)
-        self.Table3 = self.draw_table(1, 6, 4, 3, self.Table3Data)
-        self.Table4 = self.draw_table(1, 9, 4, 3, self.Table4Data)
+        self.pictureTableData = self.create_model(['Picture'], [])
+        self.audioTableData = self.create_model(['Audio'], [])
+        self.promptTableData = self.create_model(['Prompt'], [])
+        self.responseTableData = self.create_model(['Response'], [])
+        self.pictureTable = self.draw_table(1, 0, 2, 3, self.pictureTableData)
+        self.pictureTable.clicked.connect(self.update_pic)
+        self.audioTable = self.draw_table(1, 3, 4, 3, self.audioTableData)
+        self.promptTable = self.draw_table(1, 6, 4, 3, self.promptTableData)
+        self.responseTable = self.draw_table(1, 9, 4, 3, self.responseTableData)
 
     def create_model(self, title, data):
         # Creates a model to be used by tableview widget.
@@ -136,14 +136,14 @@ class Window(aqt.qt.QDialog):
         if len(file) != 0:
             self.picDir = os.path.dirname(file[0])
             logging.debug('User selected picture directory (picDir): ' + str(self.picDir))
-            for i in range(self.Table1Data.rowCount()):
-                self.Table1Data.removeRow(i)
+            for i in range(self.pictureTableData.rowCount()):
+                self.pictureTableData.removeRow(i)
             for i, j in enumerate(file):
                 base = os.path.basename(j)
                 item = aqt.qt.QStandardItem(base)
                 item.setDropEnabled(False)
                 item.setEditable(False)
-                self.Table1Data.setItem(i, item)
+                self.pictureTableData.setItem(i, item)
         self.Table3and4_length()
 
     def open_audio_files(self, window):
@@ -155,22 +155,22 @@ class Window(aqt.qt.QDialog):
         file, _ = aqt.qt.QFileDialog.getOpenFileNames(self, caption, startingFolder, file_filter, options=options)
         if len(file) != 0:
             self.audioDir = os.path.dirname(file[0])
-            for i in range(self.Table2Data.rowCount()):
-                self.Table2Data.removeRow(i)
+            for i in range(self.audioTableData.rowCount()):
+                self.audioTableData.removeRow(i)
             for i, j in enumerate(file):
                 base = os.path.basename(j)
                 item = aqt.qt.QStandardItem(base)
                 item.setDropEnabled(False)
                 item.setEditable(False)
-                self.Table2Data.setItem(i, item)
+                self.audioTableData.setItem(i, item)
         self.Table3and4_length()
 
     def play(self):
         # Play button functionality - play and pause selected audio
 
-        index = self.Table2.selectedIndexes()
+        index = self.audioTable.selectedIndexes()
         if self.playing == 0:
-            if self.Table2Data.rowCount() > 0 and index != []:
+            if self.audioTableData.rowCount() > 0 and index != []:
                 try:
                     filename = index[0].data()
                     audio = os.path.join(self.audioDir, filename)
@@ -187,7 +187,7 @@ class Window(aqt.qt.QDialog):
 
     def update_pic(self):
         # Updates thumbnail image when image selected
-        index = self.Table1.selectedIndexes()
+        index = self.pictureTable.selectedIndexes()
         filename = index[0].data()
         logging.debug('User selected image: ' + str(filename))
         try:
@@ -211,9 +211,9 @@ class Window(aqt.qt.QDialog):
 
     def Table3and4_length(self):
         # Adds or removes rows to prompt and response to match first tables
-        length1 = self.Table1Data.rowCount()
-        length2 = self.Table2Data.rowCount()
-        length3 = self.Table3Data.rowCount()
+        length1 = self.pictureTableData.rowCount()
+        length2 = self.audioTableData.rowCount()
+        length3 = self.promptTableData.rowCount()
 
         if length1 > length2:
             long = length1
@@ -226,36 +226,36 @@ class Window(aqt.qt.QDialog):
             for i in range(length3, long):
                 item = aqt.qt.QStandardItem('')
                 item.setDropEnabled(False)
-                self.Table3Data.appendRow(item)
-                self.Table4Data.appendRow(item)
+                self.promptTableData.appendRow(item)
+                self.responseTableData.appendRow(item)
 
         elif length3 > long:
             for i in range(length3, long - 1, -1):
-                self.Table3Data.removeRow(i)
-                self.Table4Data.removeRow(i)
+                self.promptTableData.removeRow(i)
+                self.responseTableData.removeRow(i)
 
     def add_blank_pic(self):
         # Add new row to Table 1
         item = aqt.qt.QStandardItem('')
         item.setDropEnabled(False)
         item.setEditable(False)
-        self.Table1Data.appendRow(item)
+        self.pictureTableData.appendRow(item)
 
     def add_blank_audio(self):
         # Add new row to Table 2
         item = aqt.qt.QStandardItem('')
         item.setDropEnabled(False)
         item.setEditable(False)
-        self.Table2Data.appendRow(item)
+        self.audioTableData.appendRow(item)
 
     def copy_prompt(self):
         # Copy and paste first prompt to all rows
-        if self.Table3Data.rowCount() > 0:
-            promptObj = self.Table3Data.item(0)
+        if self.promptTableData.rowCount() > 0:
+            promptObj = self.promptTableData.item(0)
             promptObj.setDropEnabled(False)
             prompt = promptObj.text()
-            for i in range(self.Table3Data.rowCount()):
-                self.Table3Data.setItem(i, aqt.qt.QStandardItem(prompt))
+            for i in range(self.promptTableData.rowCount()):
+                self.promptTableData.setItem(i, aqt.qt.QStandardItem(prompt))
 
     # Import into Anki
     def Anki_import(self):
