@@ -28,56 +28,52 @@ class Window(aqt.qt.QDialog):
         else:
             self.setWindowTitle('Bulk Importer v.%s' % version)
         self.setWindowIcon(aqt.qt.QIcon(os.path.join(self.addonDir, 'icons', 'Py_Logo.png')))
-        self.home()
-        self.setLayout(self.grid)
-        self.position = (200, 200) # xy coordinates of top left corner of window
-        self.setGeometry(self.position[0], self.position[1], config.window_size[0] + self.position[0],
-                         config.window_size[1] + self.position[1])
-        self.show()
 
-    def home(self):
+        # Layout the main window in a grid (row, column). The grid is 5 x 11
         self.grid = aqt.qt.QGridLayout()
         self.grid.setSpacing(10)
-        # Pick pictures button
+
+        # grid locations
+        self.promptColumn = 0
+        self.pictureColumn = 3
+        self.responseColumn = 6
+        self.audioColumn = 9
+
+        self.topBtnRow = 0
+        self.tableRow = 1
+        self.bottomBtnRow = 5
+
+        # Load pictures button
         picbtn = aqt.qt.QPushButton('Load pics', self)
         picbtn.clicked.connect(self.open_pic_files)
-        self.grid.addWidget(picbtn, 0, 0)
         # Add blank to pictures button
         addpicbtn = aqt.qt.QPushButton('Add blank', self)
         addpicbtn.setIcon(aqt.qt.QIcon(os.path.join(self.addonDir, 'icons', 'add-icon.png')))
         addpicbtn.clicked.connect(self.add_blank_pic)
-        self.grid.addWidget(addpicbtn, 0, 1)
         # Add blank to audio
         addaudiobtn = aqt.qt.QPushButton('Add blank', self)
         addaudiobtn.setIcon(aqt.qt.QIcon(os.path.join(self.addonDir, 'icons', 'add-icon.png')))
         addaudiobtn.clicked.connect(self.add_blank_audio)
-        self.grid.addWidget(addaudiobtn, 0, 5)
         # Pick Audio button
         audiobtn = aqt.qt.QPushButton('Load Audio', self)
         audiobtn.clicked.connect(self.open_audio_files)
         self.playing = 0
-        self.grid.addWidget(audiobtn, 0, 3)
         # Play button
         self.playbtn = aqt.qt.QPushButton('', self)
         self.playbtn.setIcon(aqt.qt.QIcon(os.path.join(self.addonDir, 'icons', 'play.png')))
         self.playbtn.clicked.connect(self.play)
-        self.grid.addWidget(self.playbtn, 0, 4)
         # Copy button
         copybtn = aqt.qt.QPushButton('Copy 1st row to all', self)
         copybtn.clicked.connect(self.copy_prompt)
-        self.grid.addWidget(copybtn, 0, 8)
         # import button
         importbtn = aqt.qt.QPushButton('Import', self)
         importbtn.clicked.connect(self.Anki_import)
-        self.grid.addWidget(importbtn, 5, 11)
         # Deck Chooser
         self.deckbtn = aqt.qt.QPushButton('Deck', self)
         self.Deck = aqt.deckchooser.DeckChooser(aqt.mw, self.deckbtn, label=False)
-        self.grid.addWidget(self.deckbtn, 5, 10)
         self.deckLabel = aqt.qt.QLabel(self)
         self.deckLabel.setText('Deck:')
         self.deckLabel.setAlignment(aqt.qt.Qt.AlignVCenter | aqt.qt.Qt.AlignRight)
-        self.grid.addWidget(self.deckLabel, 5, 9)
         # Audio Copy options
         self.keepOriginal = True
         # Picture preview, using Placeholder image for startup
@@ -87,17 +83,37 @@ class Window(aqt.qt.QDialog):
         self.picSrc = os.path.join(self.addonDir, 'icons', 'placeholder.jpeg')
         self.pixmap = aqt.qt.QPixmap(self.picSrc).scaled(150, 150, aqt.qt.Qt.KeepAspectRatio)
         self.pic.setPixmap(self.pixmap)
-        self.grid.addWidget(self.pic, 4, 0, 2, 3)
         # Draw Tables
         self.pictureTableData = self.create_model(['Picture'], [])
         self.audioTableData = self.create_model(['Audio'], [])
         self.promptTableData = self.create_model(['Prompt'], [])
         self.responseTableData = self.create_model(['Response'], [])
-        self.pictureTable = self.draw_table(1, 0, 2, 3, self.pictureTableData)
+        self.pictureTable = self.draw_table(self.tableRow, self.pictureColumn, 2, 3, self.pictureTableData)
         self.pictureTable.clicked.connect(self.update_pic)
-        self.audioTable = self.draw_table(1, 3, 4, 3, self.audioTableData)
-        self.promptTable = self.draw_table(1, 6, 4, 3, self.promptTableData)
-        self.responseTable = self.draw_table(1, 9, 4, 3, self.responseTableData)
+        self.audioTable = self.draw_table(self.tableRow, self.audioColumn, 4, 3, self.audioTableData)
+        self.promptTable = self.draw_table(self.tableRow, self.promptColumn, 4, 3, self.promptTableData)
+        self.responseTable = self.draw_table(self.tableRow, self.responseColumn, 4, 3, self.responseTableData)
+
+        # add widgets to grid, starting Top left. Left to right, row by row
+        self.grid.addWidget(copybtn, self.topBtnRow, self.promptColumn)
+        self.grid.addWidget(picbtn, self.topBtnRow, self.pictureColumn)
+        self.grid.addWidget(addpicbtn, self.topBtnRow, self.pictureColumn + 1)
+        self.grid.addWidget(audiobtn, self.topBtnRow, self.audioColumn)
+        self.grid.addWidget(self.playbtn, self.topBtnRow, self.audioColumn + 1)
+        self.grid.addWidget(addaudiobtn, self.topBtnRow, self.audioColumn + 2)
+        # (tables were added with the draw_table method)
+        self.grid.addWidget(self.pic, 4, 3, 2, 3)
+        self.grid.addWidget(self.deckLabel, self.bottomBtnRow, self.audioColumn)
+        self.grid.addWidget(self.deckbtn, self.bottomBtnRow, self.audioColumn + 1)
+        self.grid.addWidget(importbtn, self.bottomBtnRow, self.audioColumn + 2)
+        self.setLayout(self.grid)
+
+        # Set window geometry
+        self.position = (200, 200) # xy coordinates of top left corner of window
+        self.setGeometry(self.position[0], self.position[1], config.window_size[0] + self.position[0],
+                         config.window_size[1] + self.position[1])
+        self.show()
+
 
     def create_model(self, title, data):
         # Creates a model to be used by tableview widget.
@@ -123,6 +139,7 @@ class Window(aqt.qt.QDialog):
         self.grid.addWidget(self.table, row0, column0, row1, column1)
         return self.table
 
+    @ staticmethod
     def close_application(self):
         sys.exit()
 
@@ -146,7 +163,7 @@ class Window(aqt.qt.QDialog):
                 self.pictureTableData.setItem(i, item)
         self.Table3and4_length()
 
-    def open_audio_files(self, window):
+    def open_audio_files(self):
         # Opens files and displays in table2
         options = aqt.qt.QFileDialog.Options()
         caption = "Load Audio"
