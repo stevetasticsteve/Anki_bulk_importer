@@ -27,6 +27,18 @@ def create_card():
     return card
 
 
+def file_exists_warning(self, file_name):
+    check = aqt.qt.QMessageBox.question(self, 'File exists', '%s already exists in Anki\'s database. If you are '
+                                                             'intentionally reusing an image or audio clip then '
+                                                             'proceed, otherwise quit and rename the file to '
+                                                             'have a unique file name so Anki can correctly identify it'
+                                                             '. \n Do you want to continue and import this file?'
+                                        % file_name,
+                                        aqt.qt.QMessageBox.Yes | aqt.qt.QMessageBox.Close)
+    if check == aqt.qt.QMessageBox.Close:
+        logging.info('User cancelled import')
+        return True
+
 def run(self):
     length1 = self.pictureTableData.rowCount()
     logging.debug('Import proceeding')
@@ -46,7 +58,9 @@ def run(self):
             self.picImport.append(picAnki)
             logging.debug(str(picAnki) + ' appended as picture')
             if os.path.exists(os.path.join(mediaDir, picBase)):
-                logging.warning('Picture already exists, not importing')
+                if file_exists_warning(self, picBase):
+                    self.close()
+                    return None
             else:
                 pixmap = aqt.qt.QPixmap(picPath)
                 pixmap_resized = pixmap.scaled(720, 405, aqt.qt.Qt.KeepAspectRatio)
@@ -66,6 +80,10 @@ def run(self):
             self.audioImport.append(audioAnki)
             logging.debug(str(audioAnki) + ' appended as audio')
             try:
+                if os.path.exists(os.path.join(mediaDir, audioBase)):
+                    if file_exists_warning(self, audioBase):
+                        self.close()
+                        return None
                 if self.keepOriginal:  # Loop to enable destructive copy/paste. Unused, value set to True under __init))
                     shutil.copyfile(audioPath, '_' + audioBase)
                     copyAudio = os.path.join(self.addonDir, '_' + audioBase)
