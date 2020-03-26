@@ -1,5 +1,6 @@
 import aqt
 import anki
+import anki.importing
 
 import logging
 import os
