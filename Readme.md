@@ -1,8 +1,12 @@
 # Anki bulk importer
 
-An Add-on for [Anki](https://apps.ankiweb.net/) that provides a user friendly front end for Anki's import function for 
+An Add-on for [Anki](https://apps.ankiweb.net/) that provides a user-friendly front end for Anki's import function for 
 creating multimedia cards easily in batches. Each card will have a text prompt and image on the front and audio with a text 
 response on the back.
+
+This add-on was designed for language learners who need to created batches (20 a day is our goal) of cards that
+emphasise hearing spoken language over interacting with written language.
+Our team is busy learning a remote, unwritten language and thus we need to create all our own practice material.
 
 *Confirmed working in Anki Version 2.1.0beta36*
 
