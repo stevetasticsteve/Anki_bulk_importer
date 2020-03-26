@@ -25,7 +25,7 @@ Once imported you are free to move or delete the source files as copies are now 
 - [Anki 2.1](https://apps.ankiweb.net/)
 
 ### Installing
-Open Anki, navigate to tools/Add-ons. Click get Add-ons and enter the code **1312111882**. Anki will download the add-on
+Open Anki, navigate to tools/Add-ons. Click 'get Add-ons' and enter the code **1312111882**. Anki will download the add-on.
  Reboot Anki and bulk importer will be available under tools.
 
 Alternatively download bulk_importer.ankiaddon (a zip file) from this repository. Unzip it into Anki's add-on folder in
