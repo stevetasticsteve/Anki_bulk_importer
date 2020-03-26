@@ -180,3 +180,4 @@ def run(self):
     aqt.qt.QMessageBox.about(self, 'Results', summaryMsg)
     os.remove(filePath)
     logging.debug('Temporary file deleted')
+    self.close()
