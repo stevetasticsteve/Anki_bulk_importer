@@ -41,6 +41,8 @@ def file_exists_warning(self, file_name):
 
 def run(self):
     length1 = self.pictureTableData.rowCount()
+    if length1 == 0:
+        return None
     logging.debug('Import proceeding')
     self.picImport = []
     self.audioImport = []
