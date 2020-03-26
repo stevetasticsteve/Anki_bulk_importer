@@ -74,7 +74,7 @@ class Window(aqt.qt.QDialog):
         self.pic = aqt.qt.QLabel(self)
         self.pic.setScaledContents(True)
         self.pic.setAlignment(aqt.qt.Qt.AlignHCenter)
-        self.picSrc = os.path.join(self.addonDir, 'icons', 'placeholder.jpeg')
+        self.picSrc = os.path.join(self.addonDir, 'icons', 'anki.svg')
         self.pixmap = aqt.qt.QPixmap(self.picSrc).scaled(150, 150, aqt.qt.Qt.KeepAspectRatio)
         self.pic.setPixmap(self.pixmap)
         # Draw Tables
