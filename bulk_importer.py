@@ -7,8 +7,6 @@ import anki
 from . import config
 from . import run_import
 
-# todo if you load 6 pictures, then load 1 picture you don't just get 1 picture, you get several. Same with audio
-
 version = '1.1'
 
 
@@ -137,9 +135,8 @@ class Window(aqt.qt.QDialog):
         file, _ = aqt.qt.QFileDialog.getOpenFileNames(self, caption, startingFolder, file_filter, options=options)
         if len(file) != 0:
             self.picDir = os.path.dirname(file[0])
-            logging.debug('User selected picture directory (picDir): ' + str(self.picDir))
-            for i in range(self.pictureTableData.rowCount()):
-                self.pictureTableData.removeRow(i)
+            self.pictureTableData.clear()
+            logging.debug('rows left = %d' % self.pictureTableData.rowCount())
             for i, j in enumerate(file):
                 base = os.path.basename(j)
                 item = aqt.qt.QStandardItem(base)
@@ -157,8 +154,7 @@ class Window(aqt.qt.QDialog):
         file, _ = aqt.qt.QFileDialog.getOpenFileNames(self, caption, startingFolder, file_filter, options=options)
         if len(file) != 0:
             self.audioDir = os.path.dirname(file[0])
-            for i in range(self.audioTableData.rowCount()):
-                self.audioTableData.removeRow(i)
+            self.audioTableData.clear()
             for i, j in enumerate(file):
                 base = os.path.basename(j)
                 item = aqt.qt.QStandardItem(base)
