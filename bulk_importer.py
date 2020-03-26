@@ -68,8 +68,6 @@ class Window(aqt.qt.QDialog):
         self.deckLabel = aqt.qt.QLabel(self)
         self.deckLabel.setText('Deck:')
         self.deckLabel.setAlignment(aqt.qt.Qt.AlignVCenter | aqt.qt.Qt.AlignRight)
-        # Audio Copy options
-        self.keepOriginal = True
         # Picture preview, using Placeholder image for startup
         self.pic = aqt.qt.QLabel(self)
         self.pic.setScaledContents(True)

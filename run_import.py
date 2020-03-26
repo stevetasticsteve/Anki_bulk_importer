@@ -84,14 +84,11 @@ def run(self):
                     if file_exists_warning(self, audioBase):
                         self.close()
                         return None
-                if self.keepOriginal:  # Loop to enable destructive copy/paste. Unused, value set to True under __init))
-                    shutil.copyfile(audioPath, '_' + audioBase)
-                    copyAudio = os.path.join(self.addonDir, '_' + audioBase)
-                    shutil.move(audioPath, mediaDir)
-                    os.rename(copyAudio, audioBase)
-                    shutil.move(os.path.join(self.addonDir, audioBase), self.audioDir)
-                elif not self.keepOriginal:
-                    shutil.move(audioSrc, mediaDir)
+                shutil.copyfile(audioPath, '_' + audioBase)
+                copyAudio = os.path.join(self.addonDir, '_' + audioBase)
+                shutil.move(audioPath, mediaDir)
+                os.rename(copyAudio, audioBase)
+                shutil.move(os.path.join(self.addonDir, audioBase), self.audioDir)
             except shutil.Error:
                 logging.warning('File already exists: ' + str(audioBase))
                 os.remove(copyAudio)
