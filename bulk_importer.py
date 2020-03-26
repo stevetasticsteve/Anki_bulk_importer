@@ -128,9 +128,6 @@ class Window(aqt.qt.QDialog):
         self.grid.addWidget(self.table, row0, column0, row1, column1)
         return self.table
 
-    @staticmethod
-    def close_application():
-        sys.exit()
 
     def open_pic_files(self):
         # Opens files and displays in table1
