@@ -100,16 +100,18 @@ def run(self):
             logging.debug('Blank audio row, \'\' appended as audio')
 
         if self.promptTableData.item(row):
-            promptcontents = self.promptTableData.item(row)
-            self.promptImport.append(promptcontents.text())
-            logging.debug(str(promptcontents.text()) + ' appended as prompt')
+            promptcontents = self.promptTableData.item(row).text()
+            promptcontents = promptcontents.replace(',', '') # extra commas confuse the .csv import
+            self.promptImport.append(promptcontents)
+            logging.debug(str(promptcontents) + ' appended as prompt')
         else:
             self.promptImport.append('')
             logging.debug('Blank prompt row, \'\' appended as prompt')
         if self.responseTableData.item(row):
-            responsecontents = self.responseTableData.item(row)
-            self.responseImport.append(responsecontents.text())
-            logging.debug(str(responsecontents.text()) + ' appended as response')
+            responsecontents = self.responseTableData.item(row).text()
+            responsecontents = responsecontents.replace(',', '') # extra commas confuse the .csv import
+            self.responseImport.append(responsecontents)
+            logging.debug(str(responsecontents) + ' appended as response')
         else:
             self.responseImport.append('')
             logging.debug('Blank response row, \'\' appended as response')

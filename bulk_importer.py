@@ -7,7 +7,7 @@ import anki
 from . import config
 from . import run_import
 
-version = '1.1'
+version = '1.101'
 
 
 class Window(aqt.qt.QDialog):
