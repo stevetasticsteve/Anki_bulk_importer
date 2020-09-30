@@ -41,10 +41,10 @@ text because I'm learning to speak the language primarily and it helps train my 
 - Load the relevant media.
 		![Load media](https://raw.githubusercontent.com/stevetasticsteve/Anki_bulk_importer/master/icons/Screenshot%20from%202020-03-13%2016-26-02.png) <br>
 - Media will appear in the relevent column.
-		![Media appears](https://raw.githubusercontent.com/stevetasticsteve/Anki_bulk_importer/master/icons/Screenshot%20from%202020-03-13%2016-27-54.png)<br>
+		![Media appears](https://raw.githubusercontent.com/stevetasticsteve/Anki_bulk_importer/master/icons/Screenshot%20from%202020-03-13%2016-27-54.png) <br>
 - Load the audio as well.
 - Clicking on a picture filename will cause a preview of the image to appear in the bottom left corner. Selecting an audio row and clicking the play button will play a preview of the audio. Both the audio and picture tables can be rearranged by dragging rows around. Using the previews drag the images and audio around until they match.
-        ![Picture appears](https://raw.githubusercontent.com/stevetasticsteve/Anki_bulk_importer/master/icons/Screenshot%20from%202020-03-13%2016-33-01.png)<br>
+        ![Picture appears](https://raw.githubusercontent.com/stevetasticsteve/Anki_bulk_importer/master/icons/Screenshot%20from%202020-03-13%2016-33-01.png) <br>
 You can write a prompt into any row. Often you'll want the same prompt for all the cards, in that case write something in the first row (eg. 'em wanem samting') and click copy first row to all to set the same prompt for all the cards. Every card requires a prompt.
 You can write a response into any row which could be phonetics, or whatever you like. This will appear on the back of the card.
 Select the deck you wish to import to.
@@ -52,7 +52,7 @@ Select the deck you wish to import to.
 - Response rows can be blank if you wish, often they will be - the audio is the main response for a CLA card.
 If any rows are blank Bulk importer will ask you to confirm if this is what you intend.
 Click import. A confirmation window will confirm how many cards were imported.
-        ![Confirmation](https://raw.githubusercontent.com/stevetasticsteve/Anki_bulk_importer/master/icons/Screenshot%20from%202020-03-13%2016-44-56.png)<br>
+        ![Confirmation](https://raw.githubusercontent.com/stevetasticsteve/Anki_bulk_importer/master/icons/Screenshot%20from%202020-03-13%2016-44-56.png) <br>
 
 In the background Bulk importer will create cards in the Anki database and move the relevent files into Anki's media.collections folder. If a file with that name already exists in the database bulk importer will warn you about it. You can force it to proceed, but it's much better to quit and rename the file.
 You don't have to keep the original pictures and images if you don't want to, a copy of them is stored in the Anki folder, you can safely move or delete the original files.
