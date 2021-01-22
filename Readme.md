@@ -12,7 +12,7 @@ Our team is busy learning a remote, unwritten language and thus we need to creat
 Open Anki, navigate to tools/Add-ons. Click 'get Add-ons' and enter the code **1312111882**. Anki will download the add-on.
  Reboot Anki and bulk importer will be available under tools.
 
-**Confirmed working in Anki Version 2.1.15**
+**Confirmed working in Anki Version 2.1.38**
 
 ![screenshot](icons/importer_screen.png)
 
