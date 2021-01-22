@@ -6,17 +6,15 @@ import anki
 
 from . import config
 from . import run_import
+from . import path
 
-version = '1.101'
+version = '1.1.1'
 
 
 class Window(aqt.qt.QDialog):
     def __init__(self, mw):
         aqt.qt.QDialog.__init__(self, aqt.mw)
-        if config.Dev:
-            self.addonDir = (os.path.join(aqt.mw.pm.addonFolder(), 'bulk_importer_dev'))
-        else:
-            self.addonDir = (os.path.join(aqt.mw.pm.addonFolder(), 'bulk_importer'))
+        self.addonDir = path.addonDir
         os.chdir(self.addonDir)
         logging.debug('Bulk importer Window opened')
         logging.debug('CwDir: ' + str(os.getcwd()))
@@ -26,7 +24,8 @@ class Window(aqt.qt.QDialog):
             self.setWindowTitle('Bulk Importer Development version')
         else:
             self.setWindowTitle('Bulk Importer v.%s' % version)
-        self.setWindowIcon(aqt.qt.QIcon(os.path.join(self.addonDir, 'icons', 'Py_Logo.png')))
+        self.setWindowIcon(aqt.qt.QIcon(os.path.join(
+            self.addonDir, 'icons', 'Py_Logo.png')))
 
         # Layout the main window in a grid (row, column). The grid is 5 x 11
         self.grid = aqt.qt.QGridLayout()
@@ -51,7 +50,8 @@ class Window(aqt.qt.QDialog):
         self.playing = 0
         # Play button
         self.playbtn = aqt.qt.QPushButton('', self)
-        self.playbtn.setIcon(aqt.qt.QIcon(os.path.join(self.addonDir, 'icons', 'play.png')))
+        self.playbtn.setIcon(aqt.qt.QIcon(
+            os.path.join(self.addonDir, 'icons', 'play.png')))
         self.playbtn.clicked.connect(self.play)
         # Copy button
         copybtn = aqt.qt.QPushButton('Copy 1st row to all', self)
@@ -61,27 +61,34 @@ class Window(aqt.qt.QDialog):
         importbtn.clicked.connect(self.Anki_import)
         # Deck Chooser
         self.deckbtn = aqt.qt.QPushButton('Deck', self)
-        self.Deck = aqt.deckchooser.DeckChooser(aqt.mw, self.deckbtn, label=False)
+        self.Deck = aqt.deckchooser.DeckChooser(
+            aqt.mw, self.deckbtn, label=False)
         self.deckLabel = aqt.qt.QLabel(self)
         self.deckLabel.setText('Deck:')
-        self.deckLabel.setAlignment(aqt.qt.Qt.AlignVCenter | aqt.qt.Qt.AlignRight)
+        self.deckLabel.setAlignment(
+            aqt.qt.Qt.AlignVCenter | aqt.qt.Qt.AlignRight)
         # Picture preview, using Placeholder image for startup
         self.pic = aqt.qt.QLabel(self)
         self.pic.setScaledContents(True)
         self.pic.setAlignment(aqt.qt.Qt.AlignHCenter)
         self.picSrc = os.path.join(self.addonDir, 'icons', 'anki.svg')
-        self.pixmap = aqt.qt.QPixmap(self.picSrc).scaled(150, 150, aqt.qt.Qt.KeepAspectRatio)
+        self.pixmap = aqt.qt.QPixmap(self.picSrc).scaled(
+            150, 150, aqt.qt.Qt.KeepAspectRatio)
         self.pic.setPixmap(self.pixmap)
         # Draw Tables
         self.pictureTableData = self.create_model(['Picture'], [])
         self.audioTableData = self.create_model(['Audio'], [])
         self.promptTableData = self.create_model(['Prompt'], [])
         self.responseTableData = self.create_model(['Response'], [])
-        self.pictureTable = self.draw_table(self.tableRow, self.pictureColumn, 2, 3, self.pictureTableData)
+        self.pictureTable = self.draw_table(
+            self.tableRow, self.pictureColumn, 2, 3, self.pictureTableData)
         self.pictureTable.clicked.connect(self.update_pic)
-        self.audioTable = self.draw_table(self.tableRow, self.audioColumn, 4, 3, self.audioTableData)
-        self.promptTable = self.draw_table(self.tableRow, self.promptColumn, 4, 3, self.promptTableData)
-        self.responseTable = self.draw_table(self.tableRow, self.responseColumn, 4, 3, self.responseTableData)
+        self.audioTable = self.draw_table(
+            self.tableRow, self.audioColumn, 4, 3, self.audioTableData)
+        self.promptTable = self.draw_table(
+            self.tableRow, self.promptColumn, 4, 3, self.promptTableData)
+        self.responseTable = self.draw_table(
+            self.tableRow, self.responseColumn, 4, 3, self.responseTableData)
 
         # add widgets to grid, starting Top left. Left to right, row by row
         self.grid.addWidget(copybtn, self.topBtnRow, self.promptColumn)
@@ -90,13 +97,16 @@ class Window(aqt.qt.QDialog):
         self.grid.addWidget(self.playbtn, self.topBtnRow, self.audioColumn + 1)
         # (tables were added with the draw_table method)
         self.grid.addWidget(self.pic, 4, 3, 2, 3)
-        self.grid.addWidget(self.deckLabel, self.bottomBtnRow, self.audioColumn)
-        self.grid.addWidget(self.deckbtn, self.bottomBtnRow, self.audioColumn + 1)
+        self.grid.addWidget(
+            self.deckLabel, self.bottomBtnRow, self.audioColumn)
+        self.grid.addWidget(self.deckbtn, self.bottomBtnRow,
+                            self.audioColumn + 1)
         self.grid.addWidget(importbtn, self.bottomBtnRow, self.audioColumn + 2)
         self.setLayout(self.grid)
 
         # Set window geometry
-        self.position = (200, 200)  # xy coordinates of top left corner of window
+        # xy coordinates of top left corner of window
+        self.position = (200, 200)
         self.setGeometry(self.position[0], self.position[1], config.window_size[0] + self.position[0],
                          config.window_size[1] + self.position[1])
         self.show()
@@ -125,14 +135,14 @@ class Window(aqt.qt.QDialog):
         self.grid.addWidget(self.table, row0, column0, row1, column1)
         return self.table
 
-
     def open_pic_files(self):
         # Opens files and displays in table1
         options = aqt.qt.QFileDialog.Options()
         caption = "Load pictures"
         startingFolder = os.path.expanduser('~\pictures')
         file_filter = "Images (*.jpeg *.jpg *JPG *JPEG)"
-        file, _ = aqt.qt.QFileDialog.getOpenFileNames(self, caption, startingFolder, file_filter, options=options)
+        file, _ = aqt.qt.QFileDialog.getOpenFileNames(
+            self, caption, startingFolder, file_filter, options=options)
         if len(file) != 0:
             self.picDir = os.path.dirname(file[0])
             self.pictureTableData.clear()
@@ -151,7 +161,8 @@ class Window(aqt.qt.QDialog):
         caption = "Load Audio"
         startingFolder = os.path.expanduser('~\music')
         file_filter = "Audio (*.mp3 *.MP3)"
-        file, _ = aqt.qt.QFileDialog.getOpenFileNames(self, caption, startingFolder, file_filter, options=options)
+        file, _ = aqt.qt.QFileDialog.getOpenFileNames(
+            self, caption, startingFolder, file_filter, options=options)
         if len(file) != 0:
             self.audioDir = os.path.dirname(file[0])
             self.audioTableData.clear()
@@ -174,14 +185,16 @@ class Window(aqt.qt.QDialog):
                     audio = os.path.join(self.audioDir, filename)
                     anki.sound.play(audio)
                     self.playing = 1
-                    self.playbtn.setIcon(aqt.qt.QIcon(os.path.join(self.addonDir, 'icons', 'pause.png')))
+                    self.playbtn.setIcon(aqt.qt.QIcon(
+                        os.path.join(self.addonDir, 'icons', 'pause.png')))
                 except (AttributeError, FileNotFoundError):
                     return None
 
         elif self.playing == 1:
             anki.sound.clearAudioQueue()
             self.playing = 0
-            self.playbtn.setIcon(aqt.qt.QIcon(os.path.join(self.addonDir, 'icons', 'play.png')))
+            self.playbtn.setIcon(aqt.qt.QIcon(
+                os.path.join(self.addonDir, 'icons', 'play.png')))
 
     def update_pic(self):
         # Updates thumbnail image when image selected
@@ -191,7 +204,8 @@ class Window(aqt.qt.QDialog):
         try:
             if filename == '':
                 logging.debug('loop entered')
-                self.picSrc = os.path.join(self.addonDir, 'icons', 'no-image.png')
+                self.picSrc = os.path.join(
+                    self.addonDir, 'icons', 'no-image.png')
                 logging.debug('No image Thumbnail = ' + str(self.picSrc))
                 self.pixmap = aqt.qt.QPixmap(self.picSrc).scaled(50, 50)
                 self.pic.setPixmap(self.pixmap)
@@ -199,7 +213,8 @@ class Window(aqt.qt.QDialog):
                 newpic = os.path.join(self.picDir, filename)
                 logging.debug('Thumbnail = ' + str(newpic))
                 self.picSrc = newpic
-                self.pixmap = aqt.qt.QPixmap(self.picSrc).scaled(200, 200, aqt.qt.Qt.KeepAspectRatio)
+                self.pixmap = aqt.qt.QPixmap(self.picSrc).scaled(
+                    200, 200, aqt.qt.Qt.KeepAspectRatio)
                 self.pic.setPixmap(self.pixmap)
         except (TypeError, AttributeError):
             self.picSrc = os.path.join(self.addonDir, 'icons', 'no-image.png')
@@ -211,16 +226,20 @@ class Window(aqt.qt.QDialog):
         # Adds or removes rows to prompt and response to match first tables
 
         # find total number of rows, and also find the final non-blank row for audio and pictures
-        total_picture_rows = self.pictureTableData.rowCount()  # total number of rows including blanks on end
+        # total number of rows including blanks on end
+        total_picture_rows = self.pictureTableData.rowCount()
         picture_rows = total_picture_rows  # number of rows excluding blanks on end
-        for i in range(total_picture_rows - 1, 0, -1):  # picture_rows -1 to account for 0 indexing
+        # picture_rows -1 to account for 0 indexing
+        for i in range(total_picture_rows - 1, 0, -1):
             if self.pictureTableData.item(i).text() == '':
                 picture_rows -= 1  # will loop to find the final row containing non blank data
             else:
                 break
-        total_audio_rows = self.audioTableData.rowCount()  # total number of rows including blanks
+        # total number of rows including blanks
+        total_audio_rows = self.audioTableData.rowCount()
         audio_rows = total_audio_rows  # number of rows excluding blanks on end
-        for i in range(total_audio_rows - 1, 0, -1):  # audio_rows -1 accounts for 0 indexing
+        # audio_rows -1 accounts for 0 indexing
+        for i in range(total_audio_rows - 1, 0, -1):
             if self.audioTableData.item(i).text() == '':
                 audio_rows -= 1
             else:

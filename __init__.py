@@ -4,13 +4,11 @@ import logging
 
 from . import bulk_importer
 from . import config
+from . import path
 
-if config.Dev:
-    addonDir = os.path.join(aqt.mw.pm.addonFolder(), 'bulk_importer_dev')
-else:
-    addonDir = os.path.join(aqt.mw.pm.addonFolder(), 'bulk_importer')
-os.chdir(addonDir)
-logging.basicConfig(filename='logfile.log', level=logging.DEBUG)
+os.chdir(path.addonDir)
+
+logging.basicConfig(filename='logfile.log', level=logging.ERROR)
 
 
 def CLAImporter():
@@ -19,6 +17,7 @@ def CLAImporter():
         bulk_importer.run()
     except Exception as e:
         logging.critical(str(e))
+        raise
 
 
 # create a new menu item, "CLA importer"
