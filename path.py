@@ -7,9 +7,9 @@ import aqt
 
 # custom path for dev work
 if config.Dev:
-    addonDir = os.path.join(aqt.mw.pm.addonFolder(), 'bulk_importer_dev')
+    addonDir = os.path.join(aqt.mw.pm.addonFolder(), "bulk_importer_dev")
 else:
-    if (os.path.exists(os.path.join(aqt.mw.pm.addonFolder(), config.addon_num))):
+    if os.path.exists(os.path.join(aqt.mw.pm.addonFolder(), config.addon_num)):
         addonDir = os.path.join(aqt.mw.pm.addonFolder(), config.addon_num)
     else:
-        addonDir = os.path.join(aqt.mw.pm.addonFolder(), 'bulk_importer')
+        addonDir = os.path.join(aqt.mw.pm.addonFolder(), "bulk_importer")

@@ -8,4 +8,4 @@ window_size = (1200, 400)
 Dev = False
 
 # Ankiweb's addon ID
-addon_num = '1312111882'
+addon_num = "1312111882"

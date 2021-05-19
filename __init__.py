@@ -8,12 +8,12 @@ from . import path
 
 os.chdir(path.addonDir)
 
-logging.basicConfig(filename='logfile.log', level=logging.ERROR)
+logging.basicConfig(filename="logfile.log", level=logging.ERROR)
 
 
 def CLAImporter():
     try:
-        logging.debug('\n\nAddon called from menu')
+        logging.debug("\n\nAddon called from menu")
         bulk_importer.run()
     except Exception as e:
         logging.critical(str(e))
