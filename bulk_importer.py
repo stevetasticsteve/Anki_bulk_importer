@@ -147,7 +147,7 @@ class Window(aqt.qt.QDialog):
         options = aqt.qt.QFileDialog.Options()
         caption = "Load pictures"
         startingFolder = os.path.expanduser("~\pictures")
-        file_filter = "Image files (*.[jJ][pP][gG] *.[jJ][pP][eE][gG] *.[pP][nN][gG])"
+        file_filter = "Image files (*.jpg *.jpeg *.png *.JPG *.JPEG *.PNG)"
         file, _ = aqt.qt.QFileDialog.getOpenFileNames(
             self, caption, startingFolder, file_filter, options=options
         )
