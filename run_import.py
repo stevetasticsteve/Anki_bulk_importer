@@ -252,7 +252,7 @@ def run(self):
     try:
         importer = anki.importing.Importers[0][1]
     except AttributeError:
-        importer = anki.importing.Importers(aqt.mw.col)[0][1]
+        importer = anki.importing.importers(aqt.mw.col)[0][1]
     importer = importer(aqt.mw.col, filePath)
 
     # Set model to CLA, create if absent
