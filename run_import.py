@@ -249,7 +249,10 @@ def run(self):
     logging.debug("Temporary file complete")
 
     # Load Anki importer
-    importer = anki.importing.Importers[0][1]
+    try:
+        importer = anki.importing.Importers[0][1]
+    except AttributeError:
+        importer = anki.importing.Importers(aqt.mw.col)[0][1]
     importer = importer(aqt.mw.col, filePath)
 
     # Set model to CLA, create if absent
@@ -274,7 +277,10 @@ def run(self):
 
     # Importer execution and followup
     importer.run()
-    summaryMsg = str(length1) + " card(s) created in " + self.Deck._deckName + " deck."
+    try:
+        summaryMsg = f"{length1} card(s) created in {self.Deck.selected_deck_name()} deck"
+    except AttributeError:
+        summaryMsg = f"{length1} card(s) created in {self.Deck._deckName} deck"
     aqt.qt.QMessageBox.about(self, "Results", summaryMsg)
     os.remove(filePath)
     logging.debug("Temporary file deleted")

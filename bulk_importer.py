@@ -8,7 +8,7 @@ from . import config
 from . import run_import
 from . import path
 
-version = "1.1.2"
+version = "1.1.3"
 
 
 class Window(aqt.qt.QDialog):
