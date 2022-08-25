@@ -1,4 +1,5 @@
 import os
+import csv
 import logging
 
 import aqt
@@ -8,7 +9,7 @@ from . import config
 from . import run_import
 from . import path
 
-version = "1.1.3"
+version = "1.2.0"
 
 
 class Window(aqt.qt.QDialog):
@@ -45,6 +46,9 @@ class Window(aqt.qt.QDialog):
         # Load pictures button
         picbtn = aqt.qt.QPushButton("Load pics", self)
         picbtn.clicked.connect(self.open_pic_files)
+        # Load response button
+        response_btn = aqt.qt.QPushButton("Load text", self)
+        response_btn.clicked.connect(self.open_csv_file)
         # Pick Audio button
         audiobtn = aqt.qt.QPushButton("Load Audio", self)
         audiobtn.clicked.connect(self.open_audio_files)
@@ -99,6 +103,7 @@ class Window(aqt.qt.QDialog):
         self.grid.addWidget(copybtn, self.topBtnRow, self.promptColumn)
         self.grid.addWidget(picbtn, self.topBtnRow, self.pictureColumn)
         self.grid.addWidget(audiobtn, self.topBtnRow, self.audioColumn)
+        self.grid.addWidget(response_btn, self.topBtnRow, self.responseColumn)
         self.grid.addWidget(self.playbtn, self.topBtnRow, self.audioColumn + 1)
         # (tables were added with the draw_table method)
         self.grid.addWidget(self.pic, 4, 3, 2, 3)
@@ -141,6 +146,30 @@ class Window(aqt.qt.QDialog):
         self.table.setDropIndicatorShown(True)
         self.grid.addWidget(self.table, row0, column0, row1, column1)
         return self.table
+
+    def open_csv_file(self):
+        # open a csv file and display in response table
+        options = aqt.qt.QFileDialog.Options()
+        caption = "Load text"
+        startingFolder = os.path.expanduser("~\documents")
+        file_filter = "CSV file (*.csv *.CSV)"
+        file, _ = aqt.qt.QFileDialog.getOpenFileNames(
+            self, caption, startingFolder, file_filter, options=options
+        )
+        if file:
+            with open(file[0]) as f:
+                reader = csv.reader(f)
+                text = [r[0] for r in reader]
+        else:
+            return
+
+        if text:
+            for i, t in enumerate(text):
+                item = aqt.qt.QStandardItem(t)
+                item.setDropEnabled(False)
+                item.setEditable(False)
+                self.responseTableData.setItem(i, item)
+        self.equalize_rows()
 
     def open_pic_files(self):
         # Opens files and displays in table1
@@ -258,14 +287,9 @@ class Window(aqt.qt.QDialog):
             else:
                 break
         prompt_rows = self.promptTableData.rowCount()
+        response_rows = self.responseTableData.rowCount()
 
-        # find the longest table
-        if picture_rows > audio_rows:
-            long = picture_rows
-        elif picture_rows < audio_rows:
-            long = audio_rows
-        else:  # length is equal, so use either value
-            long = picture_rows
+        long = max(picture_rows, audio_rows, response_rows)
 
         # add blank rows to prompt and response to match longest table
         if prompt_rows < long:  # add rows to prompt and response until rows equal
@@ -273,12 +297,21 @@ class Window(aqt.qt.QDialog):
                 item = aqt.qt.QStandardItem("")
                 item.setDropEnabled(False)
                 self.promptTableData.appendRow(item)
-                self.responseTableData.appendRow(item)
         elif (
             prompt_rows > long
-        ):  # remove rows from prompt and response until rows equal
+        ):  # remove rows from prompt until rows equal
             for i in range(prompt_rows, long - 1, -1):
                 self.promptTableData.removeRow(i)
+
+        if response_rows < long:  # add rows to prompt and response until rows equal
+            for i in range(response_rows, long):
+                item = aqt.qt.QStandardItem("")
+                item.setDropEnabled(False)
+                self.promptTableData.appendRow(item)
+        elif (
+            response_rows > long
+        ):  # remove rows from response until rows equal
+            for i in range(response_rows, long - 1, -1):
                 self.responseTableData.removeRow(i)
 
         # add or remove blank rows to audio to match longest table
