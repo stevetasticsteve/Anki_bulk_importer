@@ -9,7 +9,7 @@ from . import config
 from . import run_import
 from . import path
 
-version = "1.2.0"
+version = "1.3.0"
 
 
 class Window(aqt.qt.QDialog):
@@ -139,9 +139,9 @@ class Window(aqt.qt.QDialog):
         self.table.setModel(model)
         self.table.horizontalHeader().setStretchLastSection(True)
         self.table.horizontalHeader().setSectionResizeMode(aqt.qt.QHeaderView.Stretch)
-        self.table.setSelectionBehavior(self.table.SelectRows)
-        self.table.setSelectionMode(self.table.SingleSelection)
-        self.table.setDragDropMode(self.table.InternalMove)
+        self.table.setSelectionBehavior(aqt.QAbstractItemView.SelectRows)
+        self.table.setSelectionMode(aqt.QAbstractItemView.SingleSelection)
+        self.table.setDragDropMode(aqt.QAbstractItemView.InternalMove)
         self.table.setDragDropOverwriteMode(False)
         self.table.setDropIndicatorShown(True)
         self.grid.addWidget(self.table, row0, column0, row1, column1)
@@ -149,12 +149,11 @@ class Window(aqt.qt.QDialog):
 
     def open_csv_file(self):
         # open a csv file and display in response table
-        options = aqt.qt.QFileDialog.Options()
         caption = "Load text"
         startingFolder = os.path.expanduser("~\documents")
         file_filter = "CSV file (*.csv *.CSV)"
         file, _ = aqt.qt.QFileDialog.getOpenFileNames(
-            self, caption, startingFolder, file_filter, options=options
+            self, caption, startingFolder, file_filter
         )
         if file:
             with open(file[0]) as f:
@@ -173,12 +172,11 @@ class Window(aqt.qt.QDialog):
 
     def open_pic_files(self):
         # Opens files and displays in table1
-        options = aqt.qt.QFileDialog.Options()
         caption = "Load pictures"
         startingFolder = os.path.expanduser("~\pictures")
         file_filter = "Image files (*.jpg *.jpeg *.png *.JPG *.JPEG *.PNG)"
         file, _ = aqt.qt.QFileDialog.getOpenFileNames(
-            self, caption, startingFolder, file_filter, options=options
+            self, caption, startingFolder, file_filter
         )
         if len(file) != 0:
             self.picDir = os.path.dirname(file[0])
@@ -194,12 +192,11 @@ class Window(aqt.qt.QDialog):
 
     def open_audio_files(self):
         # Opens files and displays in table2
-        options = aqt.qt.QFileDialog.Options()
         caption = "Load Audio"
         startingFolder = os.path.expanduser("~\music")
         file_filter = "Audio (*.mp3 *.MP3)"
         file, _ = aqt.qt.QFileDialog.getOpenFileNames(
-            self, caption, startingFolder, file_filter, options=options
+            self, caption, startingFolder, file_filter
         )
         if len(file) != 0:
             self.audioDir = os.path.dirname(file[0])
@@ -297,9 +294,7 @@ class Window(aqt.qt.QDialog):
                 item = aqt.qt.QStandardItem("")
                 item.setDropEnabled(False)
                 self.promptTableData.appendRow(item)
-        elif (
-            prompt_rows > long
-        ):  # remove rows from prompt until rows equal
+        elif prompt_rows > long:  # remove rows from prompt until rows equal
             for i in range(prompt_rows, long - 1, -1):
                 self.promptTableData.removeRow(i)
 
@@ -308,9 +303,7 @@ class Window(aqt.qt.QDialog):
                 item = aqt.qt.QStandardItem("")
                 item.setDropEnabled(False)
                 self.promptTableData.appendRow(item)
-        elif (
-            response_rows > long
-        ):  # remove rows from response until rows equal
+        elif response_rows > long:  # remove rows from response until rows equal
             for i in range(response_rows, long - 1, -1):
                 self.responseTableData.removeRow(i)
 
