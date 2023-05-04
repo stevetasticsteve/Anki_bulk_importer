@@ -1,4 +1,4 @@
-# Anki bulk importer v1.1.2
+# Anki bulk importer v1.3.0
 
 An Add-on for [Anki](https://apps.ankiweb.net/) that provides a user-friendly front end for Anki's import function for 
 creating multimedia cards easily in batches. Each card will have a text prompt and image on the front and audio with a 
