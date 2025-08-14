@@ -1,4 +1,3 @@
-# bulk_importer.py — Qt6-safe rewrite
 import os
 import csv
 import logging
@@ -11,50 +10,6 @@ from . import run_import
 from . import path
 
 version = "1.3.0"
-
-# ---- Qt5 <-> Qt6 compatibility shims ----
-from aqt.qt import Qt, QHeaderView, QAbstractItemView
-
-# Alignment flags
-try:
-    ALIGN_LEFT    = Qt.AlignmentFlag.AlignLeft
-    ALIGN_RIGHT   = Qt.AlignmentFlag.AlignRight
-    ALIGN_HCENTER = Qt.AlignmentFlag.AlignHCenter
-    ALIGN_VCENTER = Qt.AlignmentFlag.AlignVCenter
-    ALIGN_TOP     = Qt.AlignmentFlag.AlignTop
-    ALIGN_BOTTOM  = Qt.AlignmentFlag.AlignBottom
-    ALIGN_CENTER  = Qt.AlignmentFlag.AlignCenter
-except AttributeError:
-    ALIGN_LEFT    = Qt.AlignLeft
-    ALIGN_RIGHT   = Qt.AlignRight
-    ALIGN_HCENTER = Qt.AlignHCenter
-    ALIGN_VCENTER = Qt.AlignVCenter
-    ALIGN_TOP     = Qt.AlignTop
-    ALIGN_BOTTOM  = Qt.AlignBottom
-    ALIGN_CENTER  = Qt.AlignCenter
-
-# Aspect ratio for QPixmap.scaled
-try:
-    QT_KEEP_ASPECT = Qt.AspectRatioMode.KeepAspectRatio
-except AttributeError:
-    QT_KEEP_ASPECT = Qt.KeepAspectRatio
-
-# QHeaderView resize mode
-try:
-    QHEADERVIEW_STRETCH = QHeaderView.ResizeMode.Stretch
-except AttributeError:
-    QHEADERVIEW_STRETCH = QHeaderView.Stretch
-
-# QAbstractItemView enums
-try:
-    SB_SELECT_ROWS = QAbstractItemView.SelectionBehavior.SelectRows
-    SM_SINGLE      = QAbstractItemView.SelectionMode.SingleSelection
-    DDM_INTERNAL   = QAbstractItemView.DragDropMode.InternalMove
-except AttributeError:
-    SB_SELECT_ROWS = QAbstractItemView.SelectRows
-    SM_SINGLE      = QAbstractItemView.SingleSelection
-    DDM_INTERNAL   = QAbstractItemView.InternalMove
-# ---- end shims ----
 
 
 class Window(aqt.qt.QDialog):
@@ -115,22 +70,21 @@ class Window(aqt.qt.QDialog):
         self.Deck = aqt.deckchooser.DeckChooser(aqt.mw, self.deckbtn, label=False)
         self.deckLabel = aqt.qt.QLabel(self)
         self.deckLabel.setText("Deck:")
-        self.deckLabel.setAlignment(ALIGN_VCENTER | ALIGN_RIGHT)
-
-        # Picture preview, using placeholder image for startup
+        self.deckLabel.setAlignment(aqt.qt.Qt.AlignVCenter | aqt.qt.Qt.AlignRight)
+        # Picture preview, using Placeholder image for startup
         self.pic = aqt.qt.QLabel(self)
         self.pic.setScaledContents(True)
-        self.pic.setAlignment(ALIGN_HCENTER)
+        self.pic.setAlignment(aqt.qt.Qt.AlignHCenter)
         self.picSrc = os.path.join(self.addonDir, "icons", "anki.svg")
-        self.pixmap = aqt.qt.QPixmap(self.picSrc).scaled(150, 150, QT_KEEP_ASPECT)
+        self.pixmap = aqt.qt.QPixmap(self.picSrc).scaled(
+            150, 150, aqt.qt.Qt.KeepAspectRatio
+        )
         self.pic.setPixmap(self.pixmap)
-
         # Draw Tables
         self.pictureTableData = self.create_model(["Picture"], [])
         self.audioTableData = self.create_model(["Audio"], [])
         self.promptTableData = self.create_model(["Prompt"], [])
         self.responseTableData = self.create_model(["Response"], [])
-
         self.pictureTable = self.draw_table(
             self.tableRow, self.pictureColumn, 2, 3, self.pictureTableData
         )
@@ -184,10 +138,10 @@ class Window(aqt.qt.QDialog):
         self.table = aqt.qt.QTableView(self)
         self.table.setModel(model)
         self.table.horizontalHeader().setStretchLastSection(True)
-        self.table.horizontalHeader().setSectionResizeMode(QHEADERVIEW_STRETCH)
-        self.table.setSelectionBehavior(SB_SELECT_ROWS)
-        self.table.setSelectionMode(SM_SINGLE)
-        self.table.setDragDropMode(DDM_INTERNAL)
+        self.table.horizontalHeader().setSectionResizeMode(aqt.qt.QHeaderView.Stretch)
+        self.table.setSelectionBehavior(aqt.QAbstractItemView.SelectRows)
+        self.table.setSelectionMode(aqt.QAbstractItemView.SingleSelection)
+        self.table.setDragDropMode(aqt.QAbstractItemView.InternalMove)
         self.table.setDragDropOverwriteMode(False)
         self.table.setDropIndicatorShown(True)
         self.grid.addWidget(self.table, row0, column0, row1, column1)
@@ -196,7 +150,7 @@ class Window(aqt.qt.QDialog):
     def open_csv_file(self):
         # open a csv file and display in response table
         caption = "Load text"
-        startingFolder = os.path.join(os.path.expanduser("~"), "Documents")
+        startingFolder = os.path.expanduser("~\documents")
         file_filter = "CSV file (*.csv *.CSV)"
         file, _ = aqt.qt.QFileDialog.getOpenFileNames(
             self, caption, startingFolder, file_filter
@@ -219,7 +173,7 @@ class Window(aqt.qt.QDialog):
     def open_pic_files(self):
         # Opens files and displays in table1
         caption = "Load pictures"
-        startingFolder = os.path.join(os.path.expanduser("~"), "Pictures")
+        startingFolder = os.path.expanduser("~\pictures")
         file_filter = "Image files (*.jpg *.jpeg *.png *.JPG *.JPEG *.PNG)"
         file, _ = aqt.qt.QFileDialog.getOpenFileNames(
             self, caption, startingFolder, file_filter
@@ -239,7 +193,7 @@ class Window(aqt.qt.QDialog):
     def open_audio_files(self):
         # Opens files and displays in table2
         caption = "Load Audio"
-        startingFolder = os.path.join(os.path.expanduser("~"), "Music")
+        startingFolder = os.path.expanduser("~\music")
         file_filter = "Audio (*.mp3 *.MP3)"
         file, _ = aqt.qt.QFileDialog.getOpenFileNames(
             self, caption, startingFolder, file_filter
@@ -257,6 +211,7 @@ class Window(aqt.qt.QDialog):
 
     def play(self):
         # Play button functionality - play and pause selected audio
+
         index = self.audioTable.selectedIndexes()
         if self.playing == 0:
             if self.audioTableData.rowCount() > 0 and index != []:
@@ -270,6 +225,7 @@ class Window(aqt.qt.QDialog):
                     )
                 except (AttributeError, FileNotFoundError):
                     return None
+
         elif self.playing == 1:
             anki.sound.clearAudioQueue()
             self.playing = 0
@@ -280,79 +236,80 @@ class Window(aqt.qt.QDialog):
     def update_pic(self):
         # Updates thumbnail image when image selected
         index = self.pictureTable.selectedIndexes()
-        filename = index[0].data() if index else ""
+        filename = index[0].data()
         logging.debug("User selected image: " + str(filename))
         try:
             if filename == "":
                 logging.debug("loop entered")
                 self.picSrc = os.path.join(self.addonDir, "icons", "no-image.png")
                 logging.debug("No image Thumbnail = " + str(self.picSrc))
-                self.pixmap = aqt.qt.QPixmap(self.picSrc).scaled(50, 50, QT_KEEP_ASPECT)
+                self.pixmap = aqt.qt.QPixmap(self.picSrc).scaled(50, 50)
                 self.pic.setPixmap(self.pixmap)
             else:
                 newpic = os.path.join(self.picDir, filename)
                 logging.debug("Thumbnail = " + str(newpic))
                 self.picSrc = newpic
-                self.pixmap = aqt.qt.QPixmap(self.picSrc).scaled(200, 200, QT_KEEP_ASPECT)
+                self.pixmap = aqt.qt.QPixmap(self.picSrc).scaled(
+                    200, 200, aqt.qt.Qt.KeepAspectRatio
+                )
                 self.pic.setPixmap(self.pixmap)
         except (TypeError, AttributeError):
             self.picSrc = os.path.join(self.addonDir, "icons", "no-image.png")
             logging.debug("No image Thumbnail = " + str(self.picSrc))
-            self.pixmap = aqt.qt.QPixmap(self.picSrc).scaled(50, 50, QT_KEEP_ASPECT)
+            self.pixmap = aqt.qt.QPixmap(self.picSrc).scaled(50, 50)
             self.pic.setPixmap(self.pixmap)
 
     def equalize_rows(self):
         # Adds or removes rows to prompt and response to match first tables
 
-        # total picture rows (including blanks)
+        # find total number of rows, and also find the final non-blank row for audio and pictures
+        # total number of rows including blanks on end
         total_picture_rows = self.pictureTableData.rowCount()
-        picture_rows = total_picture_rows
+        picture_rows = total_picture_rows  # number of rows excluding blanks on end
         # picture_rows -1 to account for 0 indexing
         for i in range(total_picture_rows - 1, 0, -1):
-            itm = self.pictureTableData.item(i)
-            if not itm or itm.text() == "":
-                picture_rows -= 1
+            if self.pictureTableData.item(i).text() == "":
+                picture_rows -= (
+                    1  # will loop to find the final row containing non blank data
+                )
             else:
                 break
-
-        # total audio rows (including blanks)
+        # total number of rows including blanks
         total_audio_rows = self.audioTableData.rowCount()
-        audio_rows = total_audio_rows
+        audio_rows = total_audio_rows  # number of rows excluding blanks on end
+        # audio_rows -1 accounts for 0 indexing
         for i in range(total_audio_rows - 1, 0, -1):
-            itm = self.audioTableData.item(i)
-            if not itm or itm.text() == "":
+            if self.audioTableData.item(i).text() == "":
                 audio_rows -= 1
             else:
                 break
-
         prompt_rows = self.promptTableData.rowCount()
         response_rows = self.responseTableData.rowCount()
 
         long = max(picture_rows, audio_rows, response_rows)
 
-        # add/remove rows to prompt
-        if prompt_rows < long:
-            for _ in range(prompt_rows, long):
+        # add blank rows to prompt and response to match longest table
+        if prompt_rows < long:  # add rows to prompt and response until rows equal
+            for i in range(prompt_rows, long):
                 item = aqt.qt.QStandardItem("")
                 item.setDropEnabled(False)
                 self.promptTableData.appendRow(item)
-        elif prompt_rows > long:
+        elif prompt_rows > long:  # remove rows from prompt until rows equal
             for i in range(prompt_rows, long - 1, -1):
                 self.promptTableData.removeRow(i)
 
-        # add/remove rows to response  (fixed: append to response, not prompt)
-        if response_rows < long:
-            for _ in range(response_rows, long):
+        if response_rows < long:  # add rows to prompt and response until rows equal
+            for i in range(response_rows, long):
                 item = aqt.qt.QStandardItem("")
                 item.setDropEnabled(False)
-                self.responseTableData.appendRow(item)
-        elif response_rows > long:
+                self.promptTableData.appendRow(item)
+        elif response_rows > long:  # remove rows from response until rows equal
             for i in range(response_rows, long - 1, -1):
                 self.responseTableData.removeRow(i)
 
-        # add/remove rows to audio
+        # add or remove blank rows to audio to match longest table
         if total_audio_rows < long:
-            for _ in range(total_audio_rows, long):
+            for i in range(total_audio_rows, long):
                 item = aqt.qt.QStandardItem("")
                 item.setDropEnabled(False)
                 self.audioTableData.appendRow(item)
@@ -360,9 +317,9 @@ class Window(aqt.qt.QDialog):
             for i in range(total_audio_rows, long - 1, -1):
                 self.audioTableData.removeRow(i)
 
-        # add/remove rows to picture
+        # add or remove blank rows to picture to match longest table
         if total_picture_rows < long:
-            for _ in range(total_picture_rows, long):
+            for i in range(total_picture_rows, long):
                 item = aqt.qt.QStandardItem("")
                 item.setDropEnabled(False)
                 self.pictureTableData.appendRow(item)
@@ -391,4 +348,3 @@ class Window(aqt.qt.QDialog):
 
 def run():
     Window(aqt.mw)
-
